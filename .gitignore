@@ -1,0 +1,18 @@
+# 📦 Node JS aur Third-Party Libraries ko Ignore karein (Size bachana hai!)
+node_modules/
+services/auth/node_modules/
+services/rider/node_modules/
+frontend/node_modules/
+
+# 🔐 Environment Variables (Security Ke Liye Sabse Zaruriiii!)
+.env
+.env.local
+
+# 📝 Faltu Error Logs ko Ignore karein (Humara code clean rahega)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ⚙️ OS Generated Files (Windows aur Mac apni extra files banate hain, unhe bhi hatao)
+.DS_Store
+Thumbs.db

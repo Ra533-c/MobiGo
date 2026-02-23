@@ -5,9 +5,10 @@
     "outDir": "./dist",
 
     // Environment Settings
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2020",
+    // Yahan change karein (Line 8 se 10 ke aas paas hoga)
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ES2022",
     // For nodejs:
     "lib": ["ES2020"],
     "types": ["node"],

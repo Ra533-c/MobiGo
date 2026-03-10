@@ -17,6 +17,11 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+<<<<<<< HEAD
 Rajni_kant_interview_Guide.html
 mobigo_auth_revision_part1.md.resolved
 mobigo_auth_revision_part2.md.resolved
+=======
+Rajni_Kant_Interview_Guide.html
+
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

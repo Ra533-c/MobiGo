@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -10,9 +11,22 @@ const connectDB = async () => {
             dbName: "MobiGO",
         });
         console.log("MongoDB connected ");
+=======
+import mongoose from "mongoose";
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, {
+            dbName: "MobiGO",
+        });
+        console.log("MongoDB connected ✅");
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
     }
     catch (error) {
         console.log(error);
     }
 };
+<<<<<<< HEAD
 exports.default = connectDB;
+=======
+export default connectDB;
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -51,4 +52,19 @@ app.use("/api/auth", auth_js_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     (0, db_js_1.default)();
+=======
+import express, { urlencoded } from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/auth.js";
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 5000;
+app.use(express.json());
+app.use(urlencoded({ extended: true }));
+app.use("/api/auth", authRoutes);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    connectDB();
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
 });

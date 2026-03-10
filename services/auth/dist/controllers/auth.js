@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -29,6 +30,22 @@ exports.loginUser = (0, trycatch_js_1.default)(async (req, res) => {
         });
     }
     const token = jsonwebtoken_1.default.sign({ user }, process.env.JWT_SECRET, {
+=======
+import User from "../model/User.js";
+import jwt from "jsonwebtoken";
+import TryCatch from "../middlewares/trycatch.js";
+export const loginUser = TryCatch(async (req, res) => {
+    const { email, name, image } = req.body;
+    let user = await User.findOne({ email: email });
+    if (!user) {
+        user = await User.create({
+            name,
+            email,
+            image,
+        });
+    }
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
         expiresIn: "15d",
     });
     res.status(200).json({
@@ -38,9 +55,13 @@ exports.loginUser = (0, trycatch_js_1.default)(async (req, res) => {
     });
 });
 const allowedRoles = ["customer", "admin", "seller"];
+<<<<<<< HEAD
 /*1.typeof allowedRoles ➡️ Iska Type batao kya hai? (TypeScript dekhega ki ye ek locked array hai).
 2.[number] ➡️ Is box (array) me jitne bhi numbers (Index 0, 1, 2) me elements baithe hain, saare nikalkar ek sath OR (|) lagakar jod do. */
 exports.addUserRole = (0, trycatch_js_1.default)(async (req, res) => {
+=======
+export const addUserRole = TryCatch(async (req, res) => {
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
     if (!req.user?._id) {
         return res.status(401).json({
             message: "Unauthoriszed user !",
@@ -49,6 +70,7 @@ exports.addUserRole = (0, trycatch_js_1.default)(async (req, res) => {
     const { role } = req.body;
     if (!allowedRoles.includes(role)) {
         return res.status(401).json({
+<<<<<<< HEAD
             message: "Invalid role !",
         });
     }
@@ -69,4 +91,10 @@ exports.addUserRole = (0, trycatch_js_1.default)(async (req, res) => {
 exports.myProfile = (0, trycatch_js_1.default)(async (req, res) => {
     const user = req.user;
     res.status(200).json(user);
+=======
+            message: "Invalid role !"
+        });
+    }
+    const user = await User.findByIdAndUpdate(req.user._id, { role }, { new: true });
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
 });

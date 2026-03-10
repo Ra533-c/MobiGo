@@ -1,4 +1,4 @@
-﻿import express from "express";
+import express from "express";
 import { addUserRole, loginUser, myProfile } from "../controllers/auth.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -8,6 +8,6 @@ router.post("/login", loginUser);
 
 router.put("/add/role", isAuth, addUserRole);
 
-router.get("/me", isAuth , myProfile)
+router.get("/me", isAuth, myProfile);
 
 export default router;

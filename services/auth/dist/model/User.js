@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -35,6 +36,10 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const schema = new mongoose_1.Schema({
+=======
+import mongoose, { Schema } from "mongoose";
+const schema = new Schema({
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
     name: {
         type: String,
         required: true,
@@ -53,5 +58,10 @@ const schema = new mongoose_1.Schema({
         default: null,
     },
 }, { timestamps: true });
+<<<<<<< HEAD
 const User = mongoose_1.default.model("User", schema);
 exports.default = User;
+=======
+const User = mongoose.model("User", schema);
+export default User;
+>>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

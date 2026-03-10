@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿import mongoose, { Schema, Document } from "mongoose";
-=======
 import mongoose, { Schema, Document } from "mongoose";
->>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
 
 export interface IUser extends Document {
   name: string;
@@ -36,8 +32,4 @@ const schema: Schema<IUser> = new Schema(
 
 const User = mongoose.model<IUser>("User", schema);
 
-<<<<<<< HEAD
 export default User;
-=======
-export default User;
->>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { IUser } from "../model/User.js";
 
@@ -48,47 +47,3 @@ export const isAuth = async (
     });
   }
 };
-=======
-import { Request , Response , NextFunction } from "express";
-import jwt , {JwtPayload} from "jsonwebtoken";
-import {IUser} from "../model/User.js";
-
-export interface AuthenticatedRequest extends Request {
-    user?:IUser | null ;
-}
-
-export const isAuth = async (req:AuthenticatedRequest , res:Response , next:NextFunction):Promise<void> =>{
-    try{
-        const authHeader = req.headers.authorization;
-        if(!authHeader || !authHeader.startsWith("bearer ")){
-            res.status(401).json({
-                message:"Please Login - No auth header",
-            });
-            return;
-        }
-
-        const token = authHeader.split(" ")[1];
-        if(!token){
-            res.status(401).json({
-                message:"Please Login - No token",
-            });
-            return;
-        }
-
-        const decodedToken = jwt.verify(token , process.env.JWT_SECRET as string) as JwtPayload ;
-        if(!decodedToken || !decodedToken.user){
-            res.status(401).json({
-                message:"Please Login - Invalid token",
-            });
-            return;
-        }
-
-        req.user = decodedToken.user;
-        next();
-    }catch(error:any){
-        res.status(500).json({
-            Message:"Please Login!"
-        });
-    }
-}   
->>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

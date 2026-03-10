@@ -6,13 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-<<<<<<< HEAD
     "dev": "npx tsc && node dist/index.js"
-=======
-    "dev": "concurrently \"tsc --watch\" \"node --watch dist/index.js\""
->>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -1,21 +1,8 @@
-<<<<<<< HEAD
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const auth_js_1 = require("../controllers/auth.js");
-const isAuth_js_1 = require("../middlewares/isAuth.js");
-const router = express_1.default.Router();
-router.post("/login", auth_js_1.loginUser);
-router.put("/add/role", isAuth_js_1.isAuth, auth_js_1.addUserRole);
-router.get("/me", isAuth_js_1.isAuth, auth_js_1.myProfile);
-exports.default = router;
-=======
 import express from "express";
-import { loginUser } from "../controllers/auth.js";
+import { addUserRole, loginUser, myProfile } from "../controllers/auth.js";
+import { isAuth } from "../middlewares/isAuth.js";
 const router = express.Router();
 router.post("/login", loginUser);
+router.put("/add/role", isAuth, addUserRole);
+router.get("/me", isAuth, myProfile);
 export default router;
->>>>>>> 12a67fb8429a47e75accfb493435e1dde3f30099

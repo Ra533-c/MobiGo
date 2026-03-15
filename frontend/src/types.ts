@@ -18,11 +18,13 @@ export interface AppContextType {
   user: User | null;
   loading: boolean;
   isAuth: boolean;
-//   loadingLocation:boolean;
-//   city:string;
+  location:LocationData | null;
+  loadingLocation:boolean;
+  city:string
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-//   setLoadingLocation:React.Dispatch<React.SetStateAction<boolean>>;
-//   setCity:React.Dispatch<React.SetStateAction<string>>;
+  setLoadingLocation:React.Dispatch<React.SetStateAction<boolean>>;
+  setCity:React.Dispatch<React.SetStateAction<string>>;
+  setLocation:React.Dispatch<React.SetStateAction<LocationData | null>>;
 }

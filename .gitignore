@@ -5,6 +5,9 @@ services/rider/node_modules/
 frontend/node_modules/
 dist/
 
+.agents/
+.qodo/
+
 # 🔐 Environment Variables (Security Ke Liye Sabse Zaruriiii!)
 .env
 .env.local

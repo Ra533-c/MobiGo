@@ -6,10 +6,10 @@ import axios from "axios";
 import { BiMapPin, BiUpload } from "react-icons/bi";
 
 interface props {
-  fetchMyRestaurants:()=>Promise<void>;
+  fetchMyRestaurants: () => Promise<void>;
 }
 
-const AddRestaurant = ({fetchMyRestaurants}:props) => {
+const AddRestaurant = ({ fetchMyRestaurants }: props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [phone, setPhone] = useState("");

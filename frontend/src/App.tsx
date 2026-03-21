@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -35,7 +34,6 @@ const App = () => {
             <Route path='/login' element={<Login />}></Route>
           </Route>
         </Routes>
-        <Toaster />
       </BrowserRouter>
     </>
   )

@@ -9,22 +9,29 @@ import SelectRole from './pages/SelectRole';
 import Navbar from "./components/Navbar"
 import Account from './pages/Account';
 import Cart from './pages/Cart';
+import { useAppData } from './context/AppContext';
+import Restaurant from './pages/Restaurant';
 
 
 const App = () => {
+  const { user } = useAppData();
+
+  if (user && user.role === "seller") {
+    return <Restaurant />
+  }
   return (
     <>
       <BrowserRouter>
-        
-        <Navbar/>
+
+        <Navbar />
         <Routes>
-          <Route element={<ProtectedRoute/>} >
+          <Route element={<ProtectedRoute />} >
             <Route path='/' element={<Home />}></Route>
             <Route path='/select-role' element={<SelectRole />}></Route>
             <Route path='/account' element={<Account />}></Route>
-            <Route path='/cart' element={<Cart/>}></Route>
+            <Route path='/cart' element={<Cart />}></Route>
           </Route>
-          <Route element={<PublicRoute/>} >
+          <Route element={<PublicRoute />} >
             <Route path='/login' element={<Login />}></Route>
           </Route>
         </Routes>

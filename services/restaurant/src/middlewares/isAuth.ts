@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { IUser } from "../model/User.js";
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  image: string;
+  role: string;
+  restaurantId:string;
+}
 
 export interface AuthenticatedRequest extends Request {
   user?: IUser | null;
@@ -43,7 +51,24 @@ export const isAuth = async (
     next();
   } catch (error: any) {
     res.status(500).json({
-      Message: "Please Login - JWT Error",
+      Message: "Please Login!",
     });
   }
+};
+
+export const isSeller = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const user = req.user;
+
+  if (user && user.role !== "seller") {
+    res.status(401).json({
+      message: "You are not authorized seller",
+    });
+    return;
+  }
+
+  next();
 };

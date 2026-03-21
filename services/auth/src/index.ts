@@ -16,6 +16,6 @@ app.use(urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Auth server running on port ${PORT}`);
   connectDB();
 });

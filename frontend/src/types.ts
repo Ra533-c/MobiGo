@@ -28,8 +28,8 @@ export interface AppContextType {
   setCity: React.Dispatch<React.SetStateAction<string>>;
   setLocation: React.Dispatch<React.SetStateAction<LocationData | null>>;
 }
-export interface IRestaurant{
-  _id:string; //here we need a extra field (_id) for update and delete restaurant
+export interface IRestaurant {
+  _id: string; //here we need a extra field (_id) for update and delete restaurant
   name: string;
   description?: string;
   image: string;
@@ -45,4 +45,15 @@ export interface IRestaurant{
 
   isOpen: boolean;
   createdAt: Date;
+}
+export interface IMenuItems {
+  _id: string;
+  restaurantId: string;
+  name: string;
+  description: string;
+  image?: string;
+  price: number;
+  isAvailable: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

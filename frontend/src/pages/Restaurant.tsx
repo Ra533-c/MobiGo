@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import type { IRestaurant } from "../types";
+import { type IMenuItems, type IRestaurant } from "../types.js";
 import axios from "axios";
 import { restaurantService } from "../main";
-import AddRestaurant from "../components/AddRestaurant";
-import RestaurantProfile from "../components/RestaurantProfile";
+import AddRestaurant from "../components/AddRestaurant.js";
+import RestaurantProfile from "../components/RestaurantProfile.js";
+import MenuItems from "../components/MenuItems.js";
+import AddMenuItem from "../components/AddMenuItem.js";
 
 type sellerTab = "menu" | "add-item" | "sales";
 
@@ -34,6 +36,27 @@ const Restaurant = () => {
   useEffect(() => {
     fetchMyRestaurant()
   }, []);
+
+  const [menuItems, setMenuItems] = useState<IMenuItems[]>([]);
+
+  const fetchMenuItems = async (restaurantId: string) => {
+    try {
+      const { data } = await axios.get(`${restaurantService}/api/item/all/${restaurantId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      setMenuItems(data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (restaurant?._id) {
+      fetchMenuItems(restaurant._id);
+    }
+  }, [restaurant])
 
   if (loading)
     return (
@@ -84,10 +107,14 @@ const Restaurant = () => {
           {/* content page */}
           <div className="p-5">
             {
-              tab === "menu" && (<p>Menu Page</p>)
+              tab === "menu" && (<MenuItems
+                items={menuItems}
+                onItemDeleted={() => fetchMenuItems(restaurant._id)}
+                isSeller={true}
+              />)
             }
             {
-              tab === "add-item" && (<p>Add Item Page</p>)
+              tab === "add-item" && (<AddMenuItem onItemAdded={() => fetchMenuItems(restaurant._id)} />)
             }
             {
               tab === "sales" && (<p>Sales Page</p>)

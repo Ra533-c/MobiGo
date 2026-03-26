@@ -2,8 +2,10 @@ import { LuEye, LuEyeClosed } from "react-icons/lu";
 import type { IMenuItems } from "../types";
 import { useState } from "react";
 import { CgLoadbar, CgTrash } from "react-icons/cg";
-import { LoaderIcon } from "react-hot-toast";
 import { BiSolidCartAdd } from "react-icons/bi";
+import axios from "axios";
+import { restaurantService } from "../main";
+import toast from "react-hot-toast";
 
 interface MenuItemsProps {
   items: IMenuItems[];
@@ -11,9 +13,43 @@ interface MenuItemsProps {
   isSeller: boolean;
 }
 
-const MenuItems = ({ items, onItemAdded, isSeller }: MenuItemsProps) => {
+const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
 
+  const handleDelete = async (itemId:string)=>{
+
+    const confirm = window.confirm("Are you sure you want to delete this item ?");
+    if(!confirm) return ; 
+
+    try {
+      await axios.delete(`${restaurantService}/api/item/${itemId}`,{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      toast.success("Item deleted Successfully");
+      onItemDeleted();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete item");
+    }
+  }
+
+  const toggleAvailability = async (itemId:string)=>{
+    
+    try {
+      const {data} = await axios.put(`${restaurantService}/api/item/status/${itemId}`,{},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      toast.success(data.message);
+      onItemDeleted();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to toggle availability");
+    }
+  }
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grod-cols-4">
       {
@@ -28,7 +64,7 @@ const MenuItems = ({ items, onItemAdded, isSeller }: MenuItemsProps) => {
                 className={`h-20 w-20 ronunded object-cover ${!item.isAvailable ? "grayscale brightness-75" : ""}`}
               />
               {
-                !item.isAvailable && <span className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs font-semibold text-white">OUT OF STOCK</span>
+                !item.isAvailable && <span className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs text-center font-semibold text-white">OUT OF STOCK</span>
               }
             </div>
 
@@ -52,14 +88,15 @@ const MenuItems = ({ items, onItemAdded, isSeller }: MenuItemsProps) => {
                   isSeller && (
                     <div className="flex gap-2">
                       <button
-                        onClick={() => { }}
+                        onClick={() => toggleAvailability(item._id)}
                         className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
                       >
                         {item.isAvailable ? <LuEye size={18} /> : <LuEyeClosed size={18} />}
                       </button>
 
+                      {/*item delete button */}
                       <button
-                        onClick={() => { }}
+                        onClick={() => handleDelete(item._id)}
                         className="rounded-lg p-2 text-red-500 hover:bg-red-50"
                       >
                         <CgTrash size={18} />
@@ -68,15 +105,16 @@ const MenuItems = ({ items, onItemAdded, isSeller }: MenuItemsProps) => {
                   )
                 }
 
+                {/* button to add item to cart*/}
                 {
                   !isSeller && (
                     <button
                       disabled={!item.isAvailable || isLoading}
                       className={`flex items-center justify-center p-2 rounded-lg ${!item.isAvailable || isLoading ? "cursor-not-allowed text-gray-400" : "text-red-500 hover:bg-red-50"}`}
-                      onClick={()=>{}}
+                      onClick={() => { }}
                     >
                       {
-                        isLoading ? <CgLoadbar size={18} className="animate-spin"/> : <BiSolidCartAdd size={18} />
+                        isLoading ? <CgLoadbar size={18} className="animate-spin" /> : <BiSolidCartAdd size={18} />
                       }
                     </button>
                   )

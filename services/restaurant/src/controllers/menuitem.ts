@@ -98,7 +98,7 @@ export const deleteMenuItem = TryCatch(
       });
     }
 
-    const item = await MenuItems.findById({ itemId });
+    const item = await MenuItems.findById(itemId);
 
     if (!item) {
       return res.status(404).json({
@@ -141,7 +141,7 @@ export const toggleMenuItemAvailability = TryCatch(
       });
     }
 
-    const item = await MenuItems.findById({ itemId });
+    const item = await MenuItems.findById(itemId);
 
     if (!item) {
       return res.status(404).json({

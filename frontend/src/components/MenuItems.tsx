@@ -2,10 +2,11 @@ import { LuEye, LuEyeClosed } from "react-icons/lu";
 import type { IMenuItems } from "../types";
 import { useState } from "react";
 import { CgLoadbar, CgTrash } from "react-icons/cg";
-import { BiSolidCartAdd } from "react-icons/bi";
+import { BsCartPlus } from "react-icons/bs";
 import axios from "axios";
 import { restaurantService } from "../main";
 import toast from "react-hot-toast";
+import { useAppData } from "../context/AppContext";
 
 interface MenuItemsProps {
   items: IMenuItems[];
@@ -16,16 +17,17 @@ interface MenuItemsProps {
 const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
 
-  const handleDelete = async (itemId:string)=>{
-
-    const confirm = window.confirm("Are you sure you want to delete this item ?");
-    if(!confirm) return ; 
+  const handleDelete = async (itemId: string) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this item ?",
+    );
+    if (!confirm) return;
 
     try {
-      await axios.delete(`${restaurantService}/api/item/${itemId}`,{
-        headers:{
-          Authorization:`Bearer ${localStorage.getItem("token")}`
-        }
+      await axios.delete(`${restaurantService}/api/item/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       toast.success("Item deleted Successfully");
       onItemDeleted();
@@ -33,29 +35,64 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
       console.log(error);
       toast.error("Failed to delete item");
     }
-  }
+  };
 
-  const toggleAvailability = async (itemId:string)=>{
-    
+  const toggleAvailability = async (itemId: string) => {
     try {
-      const {data} = await axios.put(`${restaurantService}/api/item/status/${itemId}`,{},{
-        headers:{
-          Authorization:`Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      const { data } = await axios.put(
+        `${restaurantService}/api/item/status/${itemId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
       toast.success(data.message);
       onItemDeleted();
     } catch (error) {
       console.log(error);
       toast.error("Failed to toggle availability");
     }
-  }
+  };
+
+  const { fetchCart } = useAppData();
+
+  const addToCart = async (restaurantId: string, itemId: string) => {
+    try {
+      setLoadingItemId(itemId);
+
+      const { data } = await axios.post(
+        `${restaurantService}/api/cart/add`,
+        {
+          restaurantId,
+          itemId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      toast.success(data.message);
+      fetchCart();
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grod-cols-4">
-      {
-        items.map((item) => {
-          const isLoading = loadingItemId === item._id;
-          return <div className={`relative flex gap-4 rounded-lg bg-white p-4 shadow-sm transition ${!item.isAvailable ? "opacity-70" : ""}`}>
+      {items.map((item) => {
+        const isLoading = loadingItemId === item._id;
+        return (
+          <div
+            className={`relative flex gap-4 rounded-lg bg-white p-4 shadow-sm transition ${!item.isAvailable ? "opacity-70" : ""}`}
+            key={item._id}
+          >
             {/* image container */}
             <div className="relative shrink-0">
               <img
@@ -63,20 +100,22 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
                 alt={item.name}
                 className={`h-20 w-20 ronunded object-cover ${!item.isAvailable ? "grayscale brightness-75" : ""}`}
               />
-              {
-                !item.isAvailable && <span className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs text-center font-semibold text-white">OUT OF STOCK</span>
-              }
+              {!item.isAvailable && (
+                <span className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs text-center font-semibold text-white">
+                  OUT OF STOCK
+                </span>
+              )}
             </div>
 
             {/* name and desc container */}
             <div className="flex flex-col justify-between flex-1">
               <div>
                 <h3 className="font-semibold">{item.name}</h3>
-                {
-                  item.description && (
-                    <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
-                  )
-                }
+                {item.description && (
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {item.description}
+                  </p>
+                )}
               </div>
 
               {/* price and action buttons container */}
@@ -84,48 +123,50 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
                 <p className="font-medium">₹{item.price}</p>
 
                 {/* eye icon to make item available or unavailable */}
-                {
-                  isSeller && (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => toggleAvailability(item._id)}
-                        className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
-                      >
-                        {item.isAvailable ? <LuEye size={18} /> : <LuEyeClosed size={18} />}
-                      </button>
+                {isSeller && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => toggleAvailability(item._id)}
+                      className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+                    >
+                      {item.isAvailable ? (
+                        <LuEye size={18} />
+                      ) : (
+                        <LuEyeClosed size={18} />
+                      )}
+                    </button>
 
-                      {/*item delete button */}
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="rounded-lg p-2 text-red-500 hover:bg-red-50"
-                      >
-                        <CgTrash size={18} />
-                      </button>
-                    </div>
-                  )
-                }
+                    {/*item delete button */}
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                    >
+                      <CgTrash size={18} />
+                    </button>
+                  </div>
+                )}
 
                 {/* button to add item to cart*/}
-                {
-                  !isSeller && (
-                    <button
-                      disabled={!item.isAvailable || isLoading}
-                      className={`flex items-center justify-center p-2 rounded-lg ${!item.isAvailable || isLoading ? "cursor-not-allowed text-gray-400" : "text-red-500 hover:bg-red-50"}`}
-                      onClick={() => { }}
-                    >
-                      {
-                        isLoading ? <CgLoadbar size={18} className="animate-spin" /> : <BiSolidCartAdd size={18} />
-                      }
-                    </button>
-                  )
-                }
+                {!isSeller && (
+                  <button
+                    disabled={!item.isAvailable || isLoading}
+                    className={`flex items-center justify-center p-2 rounded-lg ${!item.isAvailable || isLoading ? "cursor-not-allowed text-gray-400" : "text-red-500 hover:bg-red-50"}`}
+                    onClick={() => addToCart(item.restaurantId,item._id)}
+                  >
+                    {isLoading ? (
+                      <CgLoadbar size={18} className="animate-spin" />
+                    ) : (
+                      <BsCartPlus size={20} />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
-        })
-      }
-    </div >
-  )
-}
+        );
+      })}
+    </div>
+  );
+};
 
 export default MenuItems;

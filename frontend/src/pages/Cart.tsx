@@ -1,8 +1,225 @@
+import { useNavigate } from "react-router-dom";
+import { useAppData } from "../context/AppContext";
+import type { ICart, IMenuItems, IRestaurant } from "../types";
+import axios from "axios";
+import { restaurantService } from "../main";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { BiLoaderCircle } from "react-icons/bi";
+import { BiMinus } from "react-icons/bi";
+import { BiPlus } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
 
 const Cart = () => {
-  return (
-    <div>Cart</div>
-  )
-}
+  const { cart, subTotal, quantity, fetchCart } = useAppData();
+  const navigate = useNavigate();
 
-export default Cart
+  const [loadingItemId, setLoadingItemId] = useState<String | null>(null);
+  const [clearingCart, setClearingCart] = useState(false);
+
+  if (!cart || cart.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p className="text-gray-500 text-lg">Your 🛒 is Empty</p>
+      </div>
+    );
+  }
+
+  const restaurant = cart[0].restaurantId as IRestaurant;
+
+  const deliveryFee = subTotal < 250 ? 49 : 0;
+
+  const plateformFee = 7;
+
+  const grandTotal = subTotal + deliveryFee + plateformFee;
+
+  const increaseQty = async (itemId: string) => {
+    try {
+      setLoadingItemId(itemId);
+      await axios.put(
+        `${restaurantService}/api/cart/inc`,
+        { itemId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      await fetchCart();
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong");
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
+
+  const decreaseQty = async (itemId: string) => {
+    try {
+      setLoadingItemId(itemId);
+      await axios.put(
+        `${restaurantService}/api/cart/dec`,
+        { itemId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      await fetchCart();
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong");
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
+
+  const clearCart = async () => {
+    const confirm = window.confirm("Are you sure you want to clear your cart?");
+    if (!confirm) return;
+    try {
+      setClearingCart(true);
+      await axios.delete(`${restaurantService}/api/cart/clear`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      await fetchCart();
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong");
+    } finally {
+      setClearingCart(false);
+    }
+  };
+
+  const checkout = () => {
+    navigate("/checkout");
+  };
+
+  return (
+    <div className="mx-auto max-w-5xl px-4 py-6 space-y-6">
+      <div className="rounded-xl bg-white p-4 shadow-sm">
+        <h2 className="text-xl font-semibold">{restaurant.name}</h2>
+        <p className="text-sm text-gray-500">
+          {restaurant.autoLocation.formattedAddress}
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        {cart.map((cartItem: ICart) => {
+          const item = cartItem.itemId as IMenuItems;
+          const isLoading = loadingItemId === item._id;
+
+          return (
+            <div
+              key={item._id}
+              className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm"
+            >
+              <img
+                src={item.image}
+                className="h-20 w-20 rounded object-cover"
+                alt="Item image"
+              />
+
+              <div className="flex-1">
+                <h3 className="font-semibold">{item.name}</h3>
+                <p className="text-sm text-gray-500">₹{item.price}</p>
+              </div>
+
+              {/* - + btn */}
+              <div className="flex items-center gap-3">
+                {/* - btn */}
+                <button
+                  className="rounded-full border p-2 hover:bg-gray-100 disabled:opacity-50"
+                  disabled={isLoading}
+                  onClick={() => decreaseQty(item._id)}
+                >
+                  {isLoading ? (
+                    <BiLoaderCircle size={18} className="animate-spin" />
+                  ) : (
+                    <BiMinus size={18} />
+                  )}
+                </button>
+
+                {/* Qty */}
+                <span className="font-medium">{cartItem.quantity}</span>
+
+                {/* + btn */}
+                <button
+                  className="rounded-full border p-2 hover:bg-gray-100 disabled:opacity-50"
+                  disabled={isLoading}
+                  onClick={() => increaseQty(item._id)}
+                >
+                  {isLoading ? (
+                    <BiLoaderCircle size={18} className="animate-spin" />
+                  ) : (
+                    <BiPlus size={18} />
+                  )}
+                </button>
+              </div>
+
+              {/* Total price */}
+              <p className="w-20 text-right font-medium">
+                ₹{item.price * cartItem.quantity}
+              </p>
+            </div>
+          );
+        })}
+
+        <div className="rounded-xl bg-white p-4 shadow-sm space-y-3">
+          <div className="flex justify-between text-sm">
+            <span>Total Items</span>
+            <span>{quantity}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span>SubTotal</span>
+            <span>₹{subTotal}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span>Delivery Fee</span>
+            <span>{deliveryFee === 0 ? "Free" : `₹${deliveryFee}`}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span>Platform Fee</span>
+            <span>₹{plateformFee}</span>
+          </div>
+
+          {subTotal < 250 && (
+            <p className="text-xs text-gray-500">
+              Add item worth ₹{250 - subTotal} more to get free delivery
+            </p>
+          )}
+
+          <div className="flex justify-between text-base font-semibold border-t  pt-2">
+            <span>Grand Total</span>
+            <span>₹{grandTotal}</span>
+          </div>
+
+          <button
+            className={`mt-3 w-full rounded-lg bg-[#e23744] py-3 text-sm font-semibold text-white hover:bg-red-800 ${!restaurant.isOpen ? "opacity-50 cursor-not-allowed" : ""}`}
+            onClick={checkout}
+            disabled={!restaurant.isOpen}
+          >
+            {restaurant.isOpen ? "Proceed to Checkout" : "Restaurant is Closed"}
+          </button>
+
+          <button
+            className="flex items-center justify-center gap-3 mt-3 w-full rounded-lg bg-[#2d2323] py-3 text-sm font-semibold text-white hover:bg-gray-900 "
+            onClick={clearCart}
+            disabled={clearingCart}
+          >
+            Clear Cart
+            <BiTrash size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;

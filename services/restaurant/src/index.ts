@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import restaurantRoutes from "./routes/restaurant.js";
 import cors from "cors";
 import itemRoutes from "./routes/menuitem.js";
+import cartRoutes from "./routes/cart.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/item", itemRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.listen(PORT, () => {
   console.log(`Restaurant server running on port ${PORT}`);

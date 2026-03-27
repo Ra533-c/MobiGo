@@ -72,8 +72,9 @@ const RestaurantProfile = ({ restaurant, isSeller, onUpdate }: props) => {
             {/* if edit mode is true then show the input field for the name and address of the restaurant*/}
             {/* otherwise show the name and address of the restaurant*/}
             <div className="p-5 space-y-4">
+                {/* showing restaurant name for customer */}
                 {
-                    isSeller && <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between">
                         <div>
                             {
                                 editMode ? (
@@ -92,13 +93,16 @@ const RestaurantProfile = ({ restaurant, isSeller, onUpdate }: props) => {
                                 }
                             </div>
                         </div>
-                        <button
+
+                        {/* only seller can see the edit btn */}
+                        { isSeller && <button
                             onClick={() => setEditMode(!editMode)} className="text-gray-500 hover:text-black"
                         >
                             <BiEdit size={18} />
-                        </button>
+                        </button>}
                     </div>
                 }
+
 
                 {/*Here we are showing the description of the restaurant*/}
                 {

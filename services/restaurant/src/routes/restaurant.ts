@@ -19,7 +19,7 @@ router.put("/status", isAuth, isSeller, updateStatusRestaurant);
 router.put("/edit", isAuth, isSeller, updateRestuarant);
 
 // routes for user
-router.get("/all",isAuth,getNearbyRestaurant);
-router.get("/:id",isAuth,fetchSingleRestuarant);
+router.get("/all", isAuth, getNearbyRestaurant);
+router.get("/:id", isAuth, fetchSingleRestuarant);
 
 export default router;

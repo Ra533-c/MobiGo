@@ -27,7 +27,12 @@ export interface AppContextType {
   setLoadingLocation: React.Dispatch<React.SetStateAction<boolean>>;
   setCity: React.Dispatch<React.SetStateAction<string>>;
   setLocation: React.Dispatch<React.SetStateAction<LocationData | null>>;
+  cart:ICart[] | null ;
+  fetchCart:()=>Promise<void>;
+  subTotal:number;
+  quantity:number;
 }
+
 export interface IRestaurant {
   _id: string; //here we need a extra field (_id) for update and delete restaurant
   name: string;
@@ -54,6 +59,17 @@ export interface IMenuItems {
   image?: string;
   price: number;
   isAvailable: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+export interface ICart {
+  _id:string;
+  userId: string | User;
+  restaurantId: string | IRestaurant;
+  itemId: string | IMenuItems;
+  quantity: number;
   createdAt: Date;
   updatedAt: Date;
 }

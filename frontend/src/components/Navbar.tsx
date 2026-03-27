@@ -6,7 +6,7 @@ import { BiMapPin, BiSearch } from "react-icons/bi";
 
 
 const Navbar = () => {
-    const { isAuth, city } = useAppData();
+    const { isAuth, city, quantity } = useAppData();
     const currLocation = useLocation();
 
     const isHomePage = currLocation.pathname === "/";
@@ -40,7 +40,9 @@ const Navbar = () => {
                         className="relative"
                     >
                         <CgShoppingCart className="h-6 w-6 text-[#e23744]"></CgShoppingCart>
-                        <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#e23744] text-xs font-semibold text-white" >5</span>
+                        <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#e23744] text-xs font-semibold text-white" >
+                            {quantity}
+                        </span>
                     </Link>
 
                     {

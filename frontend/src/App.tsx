@@ -11,6 +11,8 @@ import Cart from './pages/Cart';
 import { useAppData } from './context/AppContext';
 import Restaurant from './pages/Restaurant';
 import RestaurantPage from "./pages/RestaurantPage";
+import AddAddressPage from "./pages/Address";
+import Checkout from "./pages/Checkout";
 
 
 const App = () => {
@@ -27,6 +29,8 @@ const App = () => {
         <Routes>
           <Route element={<ProtectedRoute />} >
             <Route path='/' element={<Home />}></Route>
+            <Route path="/checkout"  element={<Checkout/>}></Route>
+            <Route path='/address' element={<AddAddressPage />}></Route>
             <Route path='/restaurant/:id' element={<RestaurantPage />}></Route>
             <Route path='/select-role' element={<SelectRole />}></Route>
             <Route path='/account' element={<Account />}></Route>

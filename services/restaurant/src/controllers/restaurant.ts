@@ -210,8 +210,8 @@ export const getNearbyRestaurant = TryCatch(async(req,res)=>{
     },
     {
       $sort:{
-        isOpen:-1,
-        distance:1,
+        isOpen:-1, // Sort by isOpen in descending order
+        distance:1, // Sort by distance in ascending order
       },
     },
     {

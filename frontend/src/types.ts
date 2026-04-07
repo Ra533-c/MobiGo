@@ -27,10 +27,10 @@ export interface AppContextType {
   setLoadingLocation: React.Dispatch<React.SetStateAction<boolean>>;
   setCity: React.Dispatch<React.SetStateAction<string>>;
   setLocation: React.Dispatch<React.SetStateAction<LocationData | null>>;
-  cart:ICart[] | null ;
-  fetchCart:()=>Promise<void>;
-  subTotal:number;
-  quantity:number;
+  cart: ICart[] | null;
+  fetchCart: () => Promise<void>;
+  subTotal: number;
+  quantity: number;
 }
 
 export interface IRestaurant {
@@ -63,9 +63,8 @@ export interface IMenuItems {
   updatedAt: Date;
 }
 
-
 export interface ICart {
-  _id:string;
+  _id: string;
   userId: string | User;
   restaurantId: string | IRestaurant;
   itemId: string | IMenuItems;

@@ -1,0 +1,144 @@
+import e from "express";
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface IOrder extends Document {
+  userId: string;
+  restaurantId: string;
+  restaurantName: string;
+  riderId?: string | null;
+  riderPhone: number | null;
+  riderName: string | null;
+  distance: number;
+  riderAmount: number;
+
+  items: {
+    itemsId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+  subTotal: number;
+  deliveryFee: number;
+  platformFee: number;
+  totalAmount: number;
+
+  addressId: string;
+  deliveryAddress: {
+    formattedAddress: string;
+    mobile: number;
+    latitude: number;
+    longtitude: number;
+  };
+
+  status:
+    | "placed"
+    | "accepted"
+    | "preparing"
+    | "ready_for_rider"
+    | "rider_assigned"
+    | "picked_up"
+    | "delivered"
+    | "cancelled";
+
+  paymentMethod: "razorpay" | "stripe";
+  paymentStatus: "pending" | "paid" | "failed";
+  expireAt: Date;
+
+  createdAt: Date;
+  updateAt: Date;
+}
+
+const OrderSchema = new Schema<IOrder>(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    restaurantId: {
+      type: String,
+      required: true,
+    },
+    restaurantName: {
+      type: String,
+      required: true,
+    },
+    riderId: {
+      type: String,
+      default: null,
+    },
+    riderPhone: {
+      type: Number,
+      default: null,
+    },
+    riderName: {
+      type: String,
+      default: null,
+    },
+    deliveryAddress: {
+      formattedAddress: { type: String, required: true },
+      mobile: { type: Number, required: true },
+      latitude: Number,
+      longtitude: Number,
+    },
+    riderAmount: {
+      type: Number,
+      required: true,
+    },
+    distance: Number,
+    items: [
+      {
+        itemsId: String,
+        name: String,
+        price: Number,
+        quantity: Number,
+      },
+    ],
+    subTotal: {
+      type: Number,
+    },
+    deliveryFee: {
+      type: Number,
+    },
+    platformFee: {
+      type: Number,
+    },
+    totalAmount: {
+      type: Number,
+    },
+    addressId: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: [
+        "placed",
+        "accepted",
+        "preparing",
+        "ready_for_rider",
+        "rider_assigned",
+        "picked_up",
+        "delivered",
+        "cancelled",
+      ],
+      default: "placed",
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["razorpay", "stripe"],
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+    expireAt: {
+      type: Date,
+      index: { expireAfterSeconds: 0 },
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model<IOrder>("Order", OrderSchema);

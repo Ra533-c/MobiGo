@@ -64,7 +64,7 @@ const Home = () => {
     }
   };
 
-  
+
   useEffect(() => {
     fetchRestaurants();
   }, [location, search]);

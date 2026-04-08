@@ -23,7 +23,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
 
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-
 });
 
 interface Address {
@@ -32,22 +31,29 @@ interface Address {
   mobile: number;
 }
 
-//click-to-select location 
-const LocationPicker = ({ setLocation }: { setLocation: (lat: number, lng: number) => void; }) => {
+//click-to-select location
+const LocationPicker = ({
+  setLocation,
+}: {
+  setLocation: (lat: number, lng: number) => void;
+}) => {
   useMapEvents({
     click(e) {
       setLocation(e.latlng.lat, e.latlng.lng);
     },
   });
   return null;
-}
+};
 
 // 🎯 Locate me button
-const LocateMeButton = ({ onLocate }: { onLocate: (lat: number, lng: number) => void; }) => {
+const LocateMeButton = ({
+  onLocate,
+}: {
+  onLocate: (lat: number, lng: number) => void;
+}) => {
   const map = useMap();
 
   const locateUser = () => {
-
     if (!navigator.geolocation) {
       toast.error("Geolocation not supported");
       return;
@@ -58,7 +64,9 @@ const LocateMeButton = ({ onLocate }: { onLocate: (lat: number, lng: number) => 
         const { latitude, longitude } = pos.coords;
         map.flyTo([latitude, longitude], 16, { animate: true });
         onLocate(latitude, longitude);
-      }, () => toast.error("Location permission denied")
+      },
+      () => toast.error("Location permission denied"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
     );
   };
 
@@ -71,15 +79,13 @@ const LocateMeButton = ({ onLocate }: { onLocate: (lat: number, lng: number) => 
       Use Current Location
     </button>
   );
-}
+};
 
 const AddAddressPage = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
-
 
   // 📋 Form state
   const [mobile, setMobile] = useState("");
@@ -90,7 +96,9 @@ const AddAddressPage = () => {
   // 🌍 Reverse geocoding
   const fetchFormattedAddress = async (lat: number, lng: number) => {
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      );
 
       const data = await res.json();
 
@@ -98,7 +106,7 @@ const AddAddressPage = () => {
     } catch (error) {
       toast.error("Failed to fetch address");
     }
-  }
+  };
 
   const setLocation = (lat: number, lng: number) => {
     setLatitude(lat);
@@ -111,14 +119,14 @@ const AddAddressPage = () => {
     try {
       const { data } = await axios.get(`${restaurantService}/api/address/all`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       setAddresses(data?.addresses || []);
     } catch (error) {
       toast.error("Failed to load addresses");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -141,7 +149,8 @@ const AddAddressPage = () => {
     try {
       setAdding(true);
 
-      await axios.post(`${restaurantService}/api/address/new`,
+      await axios.post(
+        `${restaurantService}/api/address/new`,
         {
           formattedAddress,
           mobile,
@@ -150,7 +159,7 @@ const AddAddressPage = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
       );
@@ -168,17 +177,17 @@ const AddAddressPage = () => {
     }
   };
 
-
-  // 🗑 Delete address 
+  // 🗑 Delete address
   const deleteAddress = async (id: string) => {
-    if (!window.confirm("Are you sure , you wanna delete this address ?")) return;
+    if (!window.confirm("Are you sure , you wanna delete this address ?"))
+      return;
 
     try {
       setDeletingId(id);
       await axios.delete(`${restaurantService}/api/address/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       toast.success("Address deleted");
@@ -209,9 +218,7 @@ const AddAddressPage = () => {
 
           <LocationPicker setLocation={setLocation} />
           <LocateMeButton onLocate={setLocation} />
-          {
-            latitude && longitude && <Marker position={[latitude, longitude]} />
-          }
+          {latitude && longitude && <Marker position={[latitude, longitude]} />}
         </MapContainer>
       </div>
 
@@ -255,11 +262,9 @@ const AddAddressPage = () => {
               className="flex items-center justify-between rounded-lg border bg-white p-3"
             >
               <div>
-
                 <p className="text-sm font-medium">{addr.formattedAddress}</p>
 
                 <p className="text-xs text-gray-500">📞{addr.mobile}</p>
-
               </div>
               <button
                 onClick={() => deleteAddress(addr._id)}

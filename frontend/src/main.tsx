@@ -11,11 +11,9 @@ export const utilsService = 'http://localhost:5002';
 export const restaurantService = 'http://localhost:5001';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <GoogleOAuthProvider clientId="331858214070-b0pekgtpebujsepsea2q9jn6nqfpouvv.apps.googleusercontent.com">
-      <AppProvider>
-        <App />
-      </AppProvider>
-    </GoogleOAuthProvider>
-  </StrictMode>,
+  <GoogleOAuthProvider clientId="331858214070-b0pekgtpebujsepsea2q9jn6nqfpouvv.apps.googleusercontent.com">
+    <AppProvider>
+      <App />
+    </AppProvider>
+  </GoogleOAuthProvider>,
 )

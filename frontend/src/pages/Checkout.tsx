@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import type { ICart, IMenuItems, IRestaurant } from "../types.js";
 import toast from "react-hot-toast";
 import { BiCreditCard, BiLoader } from "react-icons/bi";
+import { loadStripe } from "@stripe/stripe-js";
 
 interface Address {
   _id: string;
@@ -88,7 +89,7 @@ const Checkout = () => {
         {
           paymentMethod,
           addressId: selectedAddressId,
-          
+
         },
         {
           headers: {
@@ -155,15 +156,37 @@ const Checkout = () => {
     }
   };
 
+  // const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!.trim());
+
   const payWithStripe = async () => {
     try {
       setLoadingStripe(true);
 
       const order = await createOrder("stripe");
-
       if (!order) return;
 
-      console.log("Stripe checkout ", order);
+      const { orderId } = order;
+
+      try {
+        // const stripe = await stripePromise;
+
+        const { data } = await axios.post(`${utilsService}/api/payment/stripe/create`, {
+          orderId,
+        })
+
+        console.log(`success_url data.url -> ${data.url}`);
+        console.log('Backend response →', data);
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          toast.error("failed to create payment session");
+        }
+
+      } catch (error) {
+        toast.error("Payment failed")
+      }
+
     } catch (error) {
       console.log(error);
       toast.error("Payment failed");

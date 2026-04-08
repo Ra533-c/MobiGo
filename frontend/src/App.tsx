@@ -13,6 +13,8 @@ import Restaurant from './pages/Restaurant';
 import RestaurantPage from "./pages/RestaurantPage";
 import AddAddressPage from "./pages/Address";
 import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import OrderSuccess from "./pages/OrderSuccess";
 
 
 const App = () => {
@@ -29,7 +31,9 @@ const App = () => {
         <Routes>
           <Route element={<ProtectedRoute />} >
             <Route path='/' element={<Home />}></Route>
-            <Route path="/checkout"  element={<Checkout/>}></Route>
+            <Route path='/paymentsuccess/:paymentId' element={<PaymentSuccess />}></Route>
+            <Route path='/ordersuccess' element={<OrderSuccess />}></Route>
+            <Route path="/checkout" element={<Checkout />}></Route>
             <Route path='/address' element={<AddAddressPage />}></Route>
             <Route path='/restaurant/:id' element={<RestaurantPage />}></Route>
             <Route path='/select-role' element={<SelectRole />}></Route>

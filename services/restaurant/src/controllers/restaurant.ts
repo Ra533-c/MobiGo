@@ -155,7 +155,7 @@ export const updateRestuarant = TryCatch(
       return res.status(403).json({
         message: "Please Login",
       });
-    };
+    }
 
     const { name, description } = req.body;
 
@@ -169,7 +169,7 @@ export const updateRestuarant = TryCatch(
       return res.status(400).json({
         message: "No Restaurant Found",
       });
-    };
+    }
 
     res.json({
       message: "Restaurant updated successfully",
@@ -178,63 +178,62 @@ export const updateRestuarant = TryCatch(
   },
 );
 
-export const getNearbyRestaurant = TryCatch(async(req,res)=>{
-  const {latitude,longitude,radius=5000,search=""} = req.query;
+export const getNearbyRestaurant = TryCatch(async (req, res) => {
+  const { latitude, longitude, radius = 5000, search = "" } = req.query;
 
-  if(!latitude || !longitude){
+  if (!latitude || !longitude) {
     return res.status(400).json({
-      message:"Latitude and Longitude are required",
+      message: "Latitude and Longitude are required",
     });
-  };
+  }
 
-  const query:any = {
+  const query: any = {
     // isVerified:true
   };
 
-  if(search && typeof search === "string"){
-    query.name = {$regex:search,$options:"i"};
-  };
+  if (search && typeof search === "string") {
+    query.name = { $regex: search, $options: "i" };
+  }
 
   const restaurants = await Restaurant.aggregate([
     {
-      $geoNear:{
-        near:{
-          type:"Point",
-          coordinates:[Number(longitude), Number(latitude)],
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [Number(longitude), Number(latitude)],
         },
-        distanceField:"distance",
-        maxDistance:Number(radius),
-        spherical:true,
+        distanceField: "distance",
+        maxDistance: Number(radius),
+        spherical: true,
         query,
       },
     },
     {
-      $sort:{
-        isOpen:-1, // Sort by isOpen in descending order
-        distance:1, // Sort by distance in ascending order
+      $sort: {
+        isOpen: -1, // Sort by isOpen in descending order
+        distance: 1, // Sort by distance in ascending order
       },
     },
     {
-      $addFields:{
-        distancekm:{
-          $round:[{$divide:["$distance",1000]},2],
+      $addFields: {
+        distancekm: {
+          $round: [{ $divide: ["$distance", 1000] }, 2],
         },
       },
     },
   ]);
 
   res.json({
-    success:true,
-    count:restaurants.length,
+    success: true,
+    count: restaurants.length,
     restaurants,
   });
-
 });
 
-export const fetchSingleRestuarant = TryCatch(async(req,res)=>{
+export const fetchSingleRestuarant = TryCatch(async (req, res) => {
   const restaurant = await Restaurant.findById(req.params.id);
 
   res.json({
     restaurant,
   });
-})
+});

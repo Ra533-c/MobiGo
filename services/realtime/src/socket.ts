@@ -20,7 +20,11 @@ export const initSocket = (server: http.Server) => {
         return next(new Error("Unauthorized"));
       }
 
+<<<<<<< HEAD
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as any;
+=======
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+>>>>>>> 34aa840 (feat(restaurant-dashboard): add real-time order management with audio notifications)
 
       if (!decoded || !decoded.user) {
         return next(new Error("Unauthorized"));
@@ -45,10 +49,17 @@ export const initSocket = (server: http.Server) => {
 
     const userId = user._id;
 
+<<<<<<< HEAD
     socket.join(`user:${userId}`);
 
     if (user.restaurantId) {
       socket.join(`restaurant:${user.restaurantId}`);
+=======
+    socket.join(`user:${userId}`); //personal room for user
+
+    if (user.restaurantId) {
+      socket.join(`restaurant:${user.restaurantId}`); //room for restaurant
+>>>>>>> 34aa840 (feat(restaurant-dashboard): add real-time order management with audio notifications)
     }
 
     console.log("User connected: ", userId);
@@ -66,4 +77,8 @@ export const getIO = () => {
   }
 
   return io;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 34aa840 (feat(restaurant-dashboard): add real-time order management with audio notifications)

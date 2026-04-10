@@ -26,7 +26,7 @@ app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/item", itemRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/address", addressRoutes);
-app.use("/api/order", orderRoutes)
+app.use("/api/order", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Restaurant server running on port ${PORT}`);

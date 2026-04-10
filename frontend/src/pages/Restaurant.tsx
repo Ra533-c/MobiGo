@@ -6,6 +6,7 @@ import AddRestaurant from "../components/AddRestaurant.js";
 import RestaurantProfile from "../components/RestaurantProfile.js";
 import MenuItems from "../components/MenuItems.js";
 import AddMenuItem from "../components/AddMenuItem.js";
+import RestaurantOrders from "../components/RestaurantOrders.js";
 
 type sellerTab = "menu" | "add-item" | "sales";
 
@@ -79,6 +80,9 @@ const Restaurant = () => {
           onUpdate={setRestaurant}
           isSeller={true}
         />
+
+        {/* restaurantOrders */}
+        <RestaurantOrders restaurantId={restaurant._id} />
 
         {/* Tabs for menu, add items, and sales */}
         <div className="rounded-xl bg-white shadow-sm">

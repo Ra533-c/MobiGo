@@ -21,6 +21,7 @@ const Account = () => {
     return (
         <div className="min-h-screen bg-gray-50 px-4 py-3">
             <div className="mx-auto max-w-md rounded-lg bg-white shadow-sm">
+                {/* profile info */}
                 <div className="flex items-center gap-4 border-b p-5">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-xl font-semibold text-white">{firstLetter}</div>
                     <div>
@@ -28,19 +29,25 @@ const Account = () => {
                         <p className="text-sm text-gray-500">{user?.email}</p>
                     </div>
                 </div>
+
+                {/* order , address and logout  */}
                 <div className="divide-y">
-                    <div className="flex cursor-pointer items-center gap-4 p-5 hover-bg-gray-50" onClick={()=>navigate("/orders")}>
+
+                    <div className="flex cursor-pointer items-center gap-4 p-5 hover:bg-gray-50" onClick={()=>navigate("/orders")}>
                         <BiPackage className="h-5 w-5 text-red-500"/>
                         <span className="font-medium">Your Orders</span>
                     </div>
-                    <div className="flex cursor-pointer items-center gap-4 p-5 hover-bg-gray-50" onClick={()=>navigate("/address")}>
+
+                    <div className="flex cursor-pointer items-center gap-4 p-5 hover:bg-gray-50" onClick={()=>navigate("/address")}>
                         <BiMapPin className="h-5 w-5 text-red-500"/>
                         <span className="font-medium">Addresses</span>
                     </div>
-                    <div className="flex cursor-pointer items-center gap-4 p-5 hover-bg-gray-50" onClick={logOutHandler}>
+
+                    <div className="flex cursor-pointer items-center gap-4 p-5 hover:bg-gray-50" onClick={logOutHandler}>
                         <BiLogOut className="h-5 w-5 text-red-500"/>
                         <span className="font-medium">Logout</span>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -134,7 +134,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                     <p className="text-sm text-gray-500">No active orders</p>
                 ) : (
                     <div
-                        className="grid grid-cols-1 md:grid-col-2
+                        className="grid grid-cols-1 md:grid-cols-2
                          gap-4"
                     >
                         {activeOrders.map((order) => (
@@ -156,7 +156,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                     <p className="text-sm text-gray-500">No completed orders</p>
                 ) : (
                     <div
-                        className="grid grid-cols-1 md:grid-col-2
+                        className="grid grid-cols-1 md:grid-cols-2
                          gap-4"
                     >
                         {completedOrders.map((order) => (

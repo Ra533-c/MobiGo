@@ -20,6 +20,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const { isAuth } = useAppData();
 
     const socketRef = useRef<Socket | null>(null);
+    //to remeber the socket connection after the re-render of the component
 
     useEffect(() => {
         if (!isAuth) {

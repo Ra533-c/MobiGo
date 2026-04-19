@@ -11,7 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const {setUser,setIsAuth} = useAppData()
+  const { setUser, setIsAuth } = useAppData();
 
   const responseGoogle = async (authResult: any) => {
     setLoading(true);
@@ -51,10 +51,13 @@ const Login = () => {
           disabled={loading}
           className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-1 py-3"
         >
-          <FcGoogle size={20}  />{loading ? "Sign-in...":"Continue with google"}
+          <FcGoogle size={20} />
+          {loading ? "Sign-in..." : "Continue with google"}
         </button>
         <p className="text-center text-xs text-gray-400">
-          By continuing, you agree to our {" "} <span className="text-[#E23774]">Terms of Service</span> and <span className="text-[#E23774]">Privacy Policy</span>.
+          By continuing, you agree to our{" "}
+          <span className="text-[#E23774]">Terms of Service</span> and{" "}
+          <span className="text-[#E23774]">Privacy Policy</span>.
         </p>
       </div>
     </div>

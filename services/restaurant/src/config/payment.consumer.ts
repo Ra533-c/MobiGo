@@ -28,7 +28,7 @@ export const startPaymentConsumer = async () => {
         {
           $set: {
             paymentStatus: "paid",
-            status: "preparing",
+            status: "placed",
           },
           $unset: {
             expireAt: 1, //now the order not delete
@@ -51,7 +51,7 @@ export const startPaymentConsumer = async () => {
           event: "order:new",
           room: `restaurant:${order.restaurantId}`,
           payload: {
-            orderId:order._id,
+            orderId: order._id,
           },
         },
         {

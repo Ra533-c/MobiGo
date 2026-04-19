@@ -278,7 +278,7 @@ export const updateOrderStatus = TryCatch(
 
     await order.save();
 
-    // realtime order status update
+    // realtime order status update which come from <OrderCard />
     await axios.post(
       `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
       {

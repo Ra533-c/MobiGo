@@ -101,7 +101,7 @@ const OrderCard = ({ order, onStatusUpdate }: props) => {
               disabled={loading}
               onClick={() => updateStatus(status)}
             >
-                Mark as {status.replaceAll("_"," ")}
+              Mark as {status.replaceAll("_", " ")}
             </button>
           ))}
         </div>

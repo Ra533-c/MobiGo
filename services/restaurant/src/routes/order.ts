@@ -11,13 +11,14 @@ import {
 
 const router = express.Router();
 
+router.get("/my", isAuth, getMyOrder);
+router.get("/:id", isAuth, fetchSingleOrder);
+
 router.post("/new", isAuth, createOrder);
 router.get("/payment/:id", fetchOrderForPayment);
 
-router.get("/:restaurantId", isAuth, isSeller, fetchRestaurantOrders);
+router.get("/restaurant/:restaurantId", isAuth, isSeller, fetchRestaurantOrders);
 router.put("/:orderId", isAuth, isSeller, updateOrderStatus);
 
-router.get("/my", isAuth, isSeller, getMyOrder);
-router.get("/:id", isAuth, isSeller, fetchSingleOrder);
 
 export default router;

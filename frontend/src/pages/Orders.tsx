@@ -27,7 +27,7 @@ const Orders = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             });
-            setOrders(data.Orders || []);
+            setOrders(data.orders || []);
         } catch (error) {
             console.log(error);
         } finally {
@@ -39,9 +39,87 @@ const Orders = () => {
         fetchOrders();
     }, []);
 
+    // socket realtime order status update
+    useEffect(() => {
+        if (!socket) return;
+
+        const onOrderUpdate = () => {
+            fetchOrders();
+        };
+
+        socket.on("order:update", onOrderUpdate);
+
+        return () => {
+            socket.off("order:update", onOrderUpdate);
+        }
+    }, [socket]);
+
+    if (loading) {
+        return <p className="text-center text-gray-500">Loading orders...</p>
+    }
+
+    if (orders.length === 0) {
+        return <div className="flex min-h-[60vh] items-center justify-center">
+            <p className="text-gray-500">No orders yet.</p>
+        </div>
+    }
+
+    const activeOrders = orders.filter((o) => ACTIVE_STATUSES.includes(o.status));
+    const completedOrder = orders.filter((o) => !ACTIVE_STATUSES.includes(o.status));
+
     return (
-        <div>Orders</div>
+        <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
+            <h1 className="text-2xl font-bold">My Orders</h1>
+
+            {/* Active order section */}
+            <section className="space-y-3">
+                <h2 className="text-lg font-semibold">Active Orders</h2>
+
+                {
+                    activeOrders.length === 0 ? (<p className="">No Active Orders yet.</p>
+                    ) : (
+                        activeOrders.map((order) => (
+                            <OrderRow
+                                key={order._id}
+                                order={order}
+                                onClick={() => navigate(`/order/${order._id}`)}
+                            />
+                        ))
+                    )
+                }
+            </section>
+
+            {/* completed order section */}
+            <section className="space-y-3">
+                <h2 className="text-lg font-semibold">Completed Orders</h2>
+
+                {
+                    completedOrder.length === 0 ? (<p className="">No Completed Orders yet.</p>
+                    ) : (
+                        completedOrder.map((order) => (
+                            <OrderRow
+                                key={order._id}
+                                order={order}
+                                onClick={() => navigate(`/order/${order._id}`)}
+                            />
+                        ))
+                    )
+                }
+            </section>
+        </div>
     )
 }
 
-export default Orders
+export default Orders;
+
+// component OrderRow ->
+const OrderRow = ({ order, onClick }: { order: IOrder, onClick: () => void }) => {
+    return (
+        <div className="cursor-pointer rounded-xl bg-white p-4 shadow-sm hover:bg-gray-50" onClick={onClick}>
+            <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">Order: #{order._id.slice(-6)}</p>
+                <span className="text-xs text-gray-500 capitalize">{order.status}</span>
+            </div>
+        </div>
+    )
+}

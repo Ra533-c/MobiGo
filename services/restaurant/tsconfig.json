@@ -6,8 +6,8 @@
 
     // Environment Settings
     // Yahan change karein (Line 8 se 10 ke aas paas hoga)
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2022",
     // For nodejs:
     "lib": ["ES2020"],

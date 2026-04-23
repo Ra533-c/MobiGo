@@ -32,13 +32,13 @@ export const loginUser = TryCatch(async (req, res) => {
     expiresIn: "15d",
   });
   res.status(200).json({
-    message: "Loging successfull",
+    message: "login successfull",
     token: token,
     user: user,
   });
 });
 
-const allowedRoles = ["customer", "admin", "seller"] as const;
+const allowedRoles = ["customer", "rider", "seller"] as const;
 type Role = (typeof allowedRoles)[number];
 /*1.typeof allowedRoles ➡️ Iska Type batao kya hai? (TypeScript dekhega ki ye ek locked array hai).
 2.[number] ➡️ Is box (array) me jitne bhi numbers (Index 0, 1, 2) me elements baithe hain, saare nikalkar ek sath OR (|) lagakar jod do. */

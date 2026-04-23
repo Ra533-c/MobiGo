@@ -7,6 +7,10 @@ dist/
 
 .agents/
 .qodo/
+.gemini/
+.kilo/
+.vscode/
+.code-review-graph/
 
 # 🔐 Environment Variables (Security Ke Liye Sabse Zaruriiii!)
 .env
@@ -25,4 +29,9 @@ Rajni_kant_interview_Guide.html
 mobigo_auth_revision_part1.md.resolved
 mobigo_auth_revision_part2.md.resolved
 Rajni_Kant_Interview_Guide.html
-
+AGENTS.md
+AGENT.md
+GEMINI.md
+.crg-ignore
+.code-review-graphignore
+PROJECT_MAP.md

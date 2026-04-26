@@ -13,6 +13,7 @@ interface IRider {
     aadharNumber: string;
     drivingLicenseNumber: string;
     isAvailable: boolean;
+    isVerified: boolean;
 }
 
 const RiderDashboard = () => {
@@ -137,7 +138,7 @@ const RiderDashboard = () => {
     if (loading) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center">
-                Loading rider details...
+                Loading rider's detail...
             </div>
         );
     }
@@ -225,9 +226,34 @@ const RiderDashboard = () => {
                             <span className="text-sm">💡</span>
                             <p className="text-[11px] leading-relaxed text-slate-600 font-medium">
                                 <span className="font-bold text-slate-900 uppercase text-[9px] tracking-tighter mr-1">Pro Tip :</span>
-                                Stay within <span className="text-blue-600 font-bold">500m</span> radius of restaurant hotspots to receive orders instantly.
+                                Stay within <span className="text-blue-600 font-bold">500m</span> radius of restaurant hotspot to receive orders instantly.
                             </p>
                         </div>
+
+                        {/* toggle btn to go online & offline */}
+                        <button
+                            onClick={toggleAvailability}
+                            disabled={toggling}
+                            className={`w-full py-3.5 rounded-xl font-bold text-white tracking-wide transition-all duration-300 transform flex items-center justify-center gap-2 mt-4
+                                ${toggling
+                                    ? "bg-slate-400 cursor-not-allowed opacity-70"
+                                    : profile.isAvailable
+                                        ? "bg-linear-to-r from-slate-600 to-slate-800 shadow-lg shadow-slate-200 active:scale-95"
+                                        : "bg-linear-to-r from-[#e23744] to-[#f05a66] shadow-lg shadow-red-200 active:scale-95 hover:brightness-110"
+                                }`}
+                        >
+                            {toggling ? (
+                                <>
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    <span>Updating...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
+                                </>
+                            )}
+                        </button>
+
                     </div>
                 </div>
 

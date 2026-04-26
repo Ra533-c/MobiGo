@@ -35,3 +35,9 @@ GEMINI.md
 .crg-ignore
 .code-review-graphignore
 PROJECT_MAP.md
+
+# Realtime Documentation
+realtime_masterguide_file1.md
+realtime_masterguide_file2.md
+realtime_flow_part1.md
+realtime_flow_part2.md

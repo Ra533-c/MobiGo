@@ -21,7 +21,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
     const [audioUnlocked, setAudioUnlocked] = useState(false);
 
     const { socket } = useSocket();
-    const audioRef = useRef<HTMLAudioElement | null>();
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         //creating a audio obj and storing it to audioRef
@@ -57,7 +57,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                 },
             );
             setOrders(data.orders || []);
-        } catch (error) {
+        } catch (error:any) {
             console.log(error?.response?.data?.message);
         } finally {
             setLoading(false);

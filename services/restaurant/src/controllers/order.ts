@@ -6,6 +6,7 @@ import Cart from "../models/Cart.js";
 import { IMenuItems } from "../models/MenuItems.js";
 import Order from "../models/Order.js";
 import Restaurant, { IRestaurant } from "../models/Restaurant.js";
+import publishEvent from "../config/order.publisher.js";
 
 export const createOrder = TryCatch(async (req: AuthenticatedRequest, res) => {
   const user = req.user;
@@ -297,6 +298,20 @@ export const updateOrderStatus = TryCatch(
     );
 
     //now assign riders ->
+    if (status === "ready_for_rider") {
+      console.log(
+        "Publishing ready_for_rider event for rider",
+        order._id.toString(),
+      );
+
+      await publishEvent("ORDER_READY_FOR_RIDER", {
+        orderId: order._id.toString(),
+        restaurantId: restaurant._id.toString(),
+        location: restaurant.autoLocation,
+      });
+
+      console.log("Event published successfully");
+    }
 
     res.json({
       message: "Order status updated successfully",
@@ -345,3 +360,205 @@ export const fetchSingleOrder = TryCatch(
     res.json({ order });
   },
 );
+
+export const assignRiderToOrder = TryCatch(async (req, res) => {
+  if (req.headers["x-internal-key"] !== process.env.INTERNAL_SERVICE_KEY) {
+    return res.status(403).json({
+      message: "Forbidden",
+    });
+  }
+
+  const { orderId, riderId, riderName, riderPhone } = req.body;
+
+  if (!orderId || !riderId || !riderName || !riderPhone) {
+    return res.status(400).json({
+      message: "Missing required fields",
+    });
+  }
+
+  const order = await Order.findById(orderId);
+
+  if (order?.riderId !== null) {
+    return res.status(400).json({
+      message: "order already assigned to a rider",
+    });
+  }
+
+  // find those order with _id=orderId and whose has riderId=null
+
+  const orderUpdated = await Order.findOneAndUpdate(
+    {
+      _id: orderId,
+      riderId: null,
+    },
+    {
+      riderId,
+      riderName,
+      riderPhone,
+      status: "rider_assigned",
+    },
+    { new: true },
+  );
+
+  // now show realtime update to customer -> that order is being assigned to rider
+  await axios.post(
+    `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+    {
+      event: "order:rider_assigned",
+      room: `user:${orderUpdated?.userId}`,
+      payload: orderUpdated,
+    },
+    {
+      headers: {
+        "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+      },
+    },
+  );
+
+  // show realtime msg to restuarant -> order is being assigned to rider
+  await axios.post(
+    `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+    {
+      event: "order:rider_assigned",
+      room: `restaurant:${orderUpdated?.restaurantId}`,
+      payload: orderUpdated,
+    },
+    {
+      headers: {
+        "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+      },
+    },
+  );
+
+  res.json({
+    message: "Rider assigned to order successfully",
+    success: true,
+    order: orderUpdated,
+  });
+});
+
+export const getCurrentOrdersForRider = TryCatch(async (req, res) => {
+  if (req.headers["x-internal-key"] !== process.env.INTERNAL_SERVICE_KEY) {
+    return res.status(403).json({
+      message: "Forbidden",
+    });
+  }
+
+  const { riderId } = req.query;
+
+  if (!riderId) {
+    return res.status(400).json({
+      message: "Rider Id is required",
+    });
+  }
+
+  const order = await Order.findOne({
+    riderId,
+    status: { $ne: "delivered" },
+  }).populate("restaurantId");
+
+  if (!order) {
+    return res.status(404).json({
+      message: "No active order found for this rider",
+    });
+  }
+
+  res.json(order);
+});
+
+//now rider update the rest of the order status
+export const updateOrderStatusByRider = TryCatch(async (req, res) => {
+  if (req.headers["x-internal-key"] !== process.env.INTERNAL_SERVICE_KEY) {
+    return res.status(403).json({
+      message: "Forbidden",
+    });
+  }
+
+  const { orderId } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return res.status(404).json({
+      message: "Order not found",
+    });
+  }
+
+  if (order.status === "rider_assigned") {
+    order.status = "picked_up";
+    await order.save();
+
+    // a realtime notification to the restaurant that the rider has picked up the order
+    await axios.post(
+      `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+      {
+        event: "order:rider_assigned",
+        room: `restaurant:${order.restaurantId}`,
+        payload: order,
+      },
+      {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+        },
+      },
+    );
+
+    // a realtime notification to the user/customer that the rider has picked up the order
+    await axios.post(
+      `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+      {
+        event: "order:rider_assigned",
+        room: `user:${order.userId}`,
+        payload: order,
+      },
+      {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+        },
+      },
+    );
+
+    return res.json({
+      message: "Order updated successfully",
+    });
+  }
+
+  if (order.status === "picked_up") {
+    order.status = "delivered";
+    await order.save();
+
+    // a realtime notification to the restaurant that the rider has delivered the order
+    await axios.post(
+      `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+      {
+        event: "order:rider_assigned",
+        room: `restaurant:${order.restaurantId}`,
+        payload: order,
+      },
+      {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+        },
+      },
+    );
+
+    // a realtime notification to the user/customer that the rider has delivered the order
+    await axios.post(
+      `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+      {
+        event: "order:rider_assigned",
+        room: `user:${order.userId}`,
+        payload: order,
+      },
+      {
+        headers: {
+          "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+        },
+      },
+    );
+
+    return res.json({
+      message: "Order updated successfully",
+    });
+  }
+});

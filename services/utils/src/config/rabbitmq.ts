@@ -10,6 +10,11 @@ export const connectRabbitMQ = async () => {
   await channel.assertQueue(process.env.PAYMENT_QUEUE!.trim(), {
     durable: true,
   });
+
+  await channel.assertQueue(process.env.RIDER_QUEUE!.trim(), {
+    durable: true,
+  });
+
   console.log("RabbitMQ Connected Successfully🐇");
 };
 

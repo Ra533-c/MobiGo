@@ -82,7 +82,7 @@ const RestaurantPage = () => {
         <MenuItems
           isSeller={false}
           items={menuItems}
-          onItemDeleted={() => {}}
+          onItemDeleted={() => { }}
         />
       </div>
     </div>

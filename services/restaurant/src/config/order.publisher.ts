@@ -9,8 +9,9 @@ const publishEvent = async (type: string, data: any) => {
     { persistent: true },
   );
 
-  console.log(`Event ${type} published to queue ${process.env.ORDER_READY_QUEUE!.trim()} with data ${JSON.stringify(data)}`);
-
+  console.log(
+    `Event ${type} published to queue ${process.env.ORDER_READY_QUEUE!.trim()} with data ${JSON.stringify(data)}`,
+  );
 };
 
 export default publishEvent;

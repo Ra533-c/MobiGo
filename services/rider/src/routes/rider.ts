@@ -16,7 +16,7 @@ router.patch("/toggle", isAuth, toggleRiderAvailablity);
 router.post("/new", isAuth, uploadFile, addRiderProfile);
 
 router.post("/accept/:orderId", isAuth, acceptOrder);
-router.get("/current", isAuth, fetchMyCurrentOrder);
+router.get("/order/current", isAuth, fetchMyCurrentOrder);
 router.put("/order/update", isAuth, updateOrderStatus);
 
 export default router;

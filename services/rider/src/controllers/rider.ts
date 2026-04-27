@@ -265,9 +265,16 @@ export const fetchMyCurrentOrder = TryCatch(
       );
 
       res.json({ order: data });
-    } catch (error) {
-      res.status(400).json({
-        message: "Error while fetching orders",
+    } catch (error: any) {
+      if (error.respones && error.response.status === 404) {
+        return res.json({
+          order: null,
+          message: "No order is assigned to you",
+        });
+      }
+
+      res.status(500).json({
+        message: "Internal Server Error while fetching current order",
       });
     }
   },

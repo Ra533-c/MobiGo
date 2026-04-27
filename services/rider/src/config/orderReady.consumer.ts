@@ -26,6 +26,9 @@ export const startOrderReadyConsumer = async () => {
       }
 
       const { orderId, restaurantId, location } = event.data;
+      console.log("orderId", orderId);
+      console.log("restaurantId", restaurantId);
+      console.log("location", location);
       console.log("Searching for the rider near", location);
 
       const riders = await Rider.find({
@@ -34,7 +37,7 @@ export const startOrderReadyConsumer = async () => {
         location: {
           $near: {
             $geometry: location,
-            $maxDistance: 500,
+            $maxDistance: 500000,
           },
         },
       });
@@ -54,7 +57,7 @@ export const startOrderReadyConsumer = async () => {
 
         try {
           await axios.post(
-            `${process.env.REALTIME_SERVICE}/api/internal/emit`,
+            `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
             {
               event: "order:available",
               room: `user:${rider.userId}`,

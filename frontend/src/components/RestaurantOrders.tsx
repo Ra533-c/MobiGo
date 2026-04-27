@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSocket } from "../context/SocketContext";
 import type { IOrder } from "../types";
-import audio from "../assets/not2.mp3";
+import audio from "../assets/not1.mp3";
 import axios from "axios";
 import { restaurantService } from "../main";
 import OrderCard from "./OrderCard";
@@ -57,7 +57,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                 },
             );
             setOrders(data.orders || []);
-        } catch (error:any) {
+        } catch (error: any) {
             console.log(error?.response?.data?.message);
         } finally {
             setLoading(false);
@@ -68,6 +68,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
         fetchOrders();
     }, [restaurantId]);
 
+    // socket realtime for new order arrival
     useEffect(() => {
         if (!socket) return;
 
@@ -90,6 +91,22 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
             socket.off("order:new", onNewOrder);
         };
     }, [socket, audioUnlocked]);
+
+    // socket realtime for rider assigned and status update
+    useEffect(() => {
+        if (!socket) return;
+
+        const onUpdateOrder = () => {
+            console.log("order updated");
+            fetchOrders();
+        }
+
+        socket.on("order:rider_assigned", onUpdateOrder);
+
+        return () => {
+            socket.off("order:rider_assigned", onUpdateOrder);
+        }
+    },[socket]);
 
     if (loading) {
         return <p className="text-gray-50">Loading orders...</p>;
@@ -159,13 +176,15 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                         className="grid grid-cols-1 md:grid-cols-2
                          gap-4"
                     >
-                        {completedOrders.map((order) => (
+                        {
+                        completedOrders.map((order) => (
                             <OrderCard
                                 key={order._id}
                                 order={order}
                                 onStatusUpdate={fetchOrders}
                             />
-                        ))}
+                        ))
+                        }
                     </div>
                 )}
             </div>

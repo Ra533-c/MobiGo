@@ -370,6 +370,17 @@ export const assignRiderToOrder = TryCatch(async (req, res) => {
 
   const { orderId, riderId, riderName, riderPhone } = req.body;
 
+  const orderAvailable = await Order.findOne({
+    riderId,
+    status: { $ne: "delivered" },
+  });
+
+  if (orderAvailable) {
+    return res.status(400).json({
+      message: "Rider is currently busy with another order",
+    });
+  }
+
   if (!orderId || !riderId || !riderName || !riderPhone) {
     return res.status(400).json({
       message: "Missing required fields",

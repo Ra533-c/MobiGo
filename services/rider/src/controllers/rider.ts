@@ -175,6 +175,9 @@ export const acceptOrder = TryCatch(async (req: AuthenticatedRequest, res) => {
   const riderUserId = req.user?._id;
   const { orderId } = req.params;
 
+  console.log("riderUserId", riderUserId);
+  console.log("orderId", orderId);
+
   if (!riderUserId) {
     return res.status(400).json({
       message: "Unauthorized please login",
@@ -221,6 +224,8 @@ export const acceptOrder = TryCatch(async (req: AuthenticatedRequest, res) => {
         },
       );
 
+      console.log("riderDetails", riderDetails);
+
       res.json({
         message: "Order accepted",
         riderDetails,
@@ -245,7 +250,7 @@ export const fetchMyCurrentOrder = TryCatch(
 
     const rider = await Rider.findOne({
       userId: riderUserId,
-      isAvailable: true,
+      isVerified: true,
     });
 
     if (!rider) {

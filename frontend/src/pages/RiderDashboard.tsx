@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 import type { IOrder } from "../types";
 import audio from "../assets/not2.mp3";
+import RiderOrderRequest from "../components/RiderOrderRequest";
+import RiderCurrentOrder from "../components/RiderCurrentOrder";
 
 interface IRider {
     _id: string;
@@ -302,29 +304,32 @@ const RiderDashboard = () => {
                         </div>
 
                         {/* toggle btn to go online & offline */}
-                        <button
-                            onClick={toggleAvailability}
-                            disabled={toggling}
-                            className={`w-full py-3.5 rounded-xl font-bold text-white tracking-wide transition-all duration-300 transform flex items-center justify-center gap-2 mt-4
+                        {
+                            profile.isVerified && !currentOrder && (
+                                <button
+                                    onClick={toggleAvailability}
+                                    disabled={toggling}
+                                    className={`w-full py-3.5 rounded-xl font-bold text-white tracking-wide transition-all duration-300 transform flex items-center justify-center gap-2 mt-4
                                 ${toggling
-                                    ? "bg-slate-400 cursor-not-allowed opacity-70"
-                                    : profile.isAvailable
-                                        ? "bg-linear-to-r from-slate-600 to-slate-800 shadow-lg shadow-slate-200 active:scale-95"
-                                        : "bg-linear-to-r from-[#e23744] to-[#f05a66] shadow-lg shadow-red-200 active:scale-95 hover:brightness-110"
-                                }`}
-                        >
-                            {toggling ? (
-                                <>
-                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                    <span>Updating...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
-                                </>
-                            )}
-                        </button>
-
+                                            ? "bg-slate-400 cursor-not-allowed opacity-70"
+                                            : profile.isAvailable
+                                                ? "bg-linear-to-r from-slate-600 to-slate-800 shadow-lg shadow-slate-200 active:scale-95"
+                                                : "bg-linear-to-r from-[#e23744] to-[#f05a66] shadow-lg shadow-red-200 active:scale-95 hover:brightness-110"
+                                        }`}
+                                >
+                                    {toggling ? (
+                                        <>
+                                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                            <span>Updating...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
+                                        </>
+                                    )}
+                                </button>
+                            )
+                        }
                     </div>
                 </div>
             </div>
@@ -361,9 +366,27 @@ const RiderDashboard = () => {
                         <h3 className="font-semibold text-gray-700">Incoming Orders</h3>
                         {
                             incomingOrders.map((id) => (
-                                <p key={id} className="">"OrderId":{id}</p>
+                                <RiderOrderRequest
+                                    key={id}
+                                    orderId={id}
+                                    onAccepted={() => {
+                                        fetchProfile();
+                                        fetchCurrentOrder();
+                                    }}
+                                />
                             ))
                         }
+                    </div>
+                )
+            }
+
+            {
+                currentOrder && (
+                    <div className="mx-auto max-w-md px-4 space-y-4">
+                        <RiderCurrentOrder
+                            order={currentOrder}
+                            onStatusUpdate={fetchCurrentOrder}
+                        />
                     </div>
                 )
             }

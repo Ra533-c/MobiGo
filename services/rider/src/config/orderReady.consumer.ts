@@ -74,7 +74,7 @@ export const startOrderReadyConsumer = async () => {
           console.log(`Failed to notified rider ${rider.userId}`);
         }
       }
-      
+
       channel.ack(msg);
       console.log(`Message acknoledged for order ${orderId}`);
     } catch (error) {

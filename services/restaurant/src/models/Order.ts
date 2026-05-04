@@ -27,7 +27,7 @@ export interface IOrder extends Document {
     formattedAddress: string;
     mobile: number;
     latitude: number;
-    longtitude: number;
+    longitude: number;
   };
 
   status:
@@ -78,7 +78,7 @@ const OrderSchema = new Schema<IOrder>(
       formattedAddress: { type: String, required: true },
       mobile: { type: Number, required: true },
       latitude: Number,
-      longtitude: Number,
+      longitude: Number,
     },
     riderAmount: {
       type: Number,

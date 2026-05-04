@@ -100,7 +100,7 @@ export interface IOrder {
     formattedAddress: string;
     mobile: number;
     latitude: number;
-    longtitude: number;
+    longitude: number;
   };
 
   status:

@@ -271,7 +271,7 @@ export const fetchMyCurrentOrder = TryCatch(
 
       res.json({ order: data });
     } catch (error: any) {
-      if (error.respones && error.response.status === 404) {
+      if (error.response && error.response.status === 404) {
         return res.json({
           order: null,
           message: "No order is assigned to you",

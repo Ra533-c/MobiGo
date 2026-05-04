@@ -20,13 +20,16 @@ router.get("/:id", isAuth, fetchSingleOrder);
 router.post("/new", isAuth, createOrder);
 router.get("/payment/:id", fetchOrderForPayment);
 
-router.get("/restaurant/:restaurantId", isAuth, isSeller, fetchRestaurantOrders);
+router.get(
+  "/restaurant/:restaurantId",
+  isAuth,
+  isSeller,
+  fetchRestaurantOrders,
+);
 router.put("/:orderId", isAuth, isSeller, updateOrderStatus);
 
-router.put("/assign/rider",assignRiderToOrder);
-router.get("/current/rider",getCurrentOrdersForRider);
-router.put("/update/status/rider",updateOrderStatusByRider);
-
-
+router.put("/assign/rider", assignRiderToOrder);
+router.get("/current/rider", getCurrentOrdersForRider);
+router.put("/update/status/rider", updateOrderStatusByRider);
 
 export default router;

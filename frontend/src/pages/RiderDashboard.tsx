@@ -9,6 +9,7 @@ import type { IOrder } from "../types";
 import audio from "../assets/not2.mp3";
 import RiderOrderRequest from "../components/RiderOrderRequest";
 import RiderCurrentOrder from "../components/RiderCurrentOrder";
+import RiderOrderMap from "../components/RiderOrderMap";
 
 interface IRider {
     _id: string;
@@ -266,130 +267,131 @@ const RiderDashboard = () => {
     }
 
     return (
-        <div className="space-y-4">
-            <div className="mx-auto max-w-md px-4 py-4">
+        <div className="min-h-screen bg-gray-50 pb-10">
+            <div className="mx-auto max-w-md px-4 py-5 space-y-4">
 
                 {/* rider info card */}
-                <div className="rounded-2xl bg-white p-6 shadow-xl border border-gray-100 space-y-4">
-                    {/* Rider Info Section */}
-                    <div className="flex flex-col items-center">
-                        <img
-                            className="h-24 w-24 rounded-full object-cover ring-4 ring-gray-50 shadow-md"
-                            src={profile.picture}
-                            alt="rider_image"
-                        />
-                        <h2 className="mt-4 text-lg font-bold text-gray-800 tracking-tight">{user?.name}</h2>
-                        <p className="text-xs font-medium text-gray-400">{profile.phoneNumber}</p>
-                    </div>
+                <div className="relative rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-white">
+                    {/* Top gradient banner */}
+                    <div className="h-24 bg-gradient-to-br from-[#e23744] via-[#f05a66] to-[#ff8a5b]" />
 
-                    {/* Status Badges Section */}
-                    <div className="flex justify-center gap-3">
-                        <span className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full border ${profile.isVerified ? "bg-green-50 text-green-600 border-green-100" : "bg-orange-50 text-orange-600 border-orange-100"}`}>
-                            {profile.isVerified ? "Verified" : "Pending"}
-                        </span>
-
-                        <span className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full border ${profile.isAvailable ? "bg-green-50 text-green-600 border-green-100" : "bg-gray-50 text-gray-400 border-gray-100"}`}>
-                            {profile.isAvailable ? "Online" : "Offline"}
-                        </span>
-                    </div>
-
-                    {/* Pro Tip Box Section */}
-                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl mt-4">
-                        <div className="flex items-start gap-3">
-                            <span className="text-sm">💡</span>
-                            <p className="text-[11px] leading-relaxed text-slate-600 font-medium">
-                                <span className="font-bold text-slate-900 uppercase text-[9px] tracking-tighter mr-1">Pro Tip :</span>
-                                Stay within <span className="text-blue-600 font-bold">500m</span> radius of restaurant hotspot to receive orders instantly.
-                            </p>
+                    {/* Avatar overlapping banner */}
+                    <div className="flex flex-col items-center -mt-12 pb-5 px-5">
+                        <div className="relative">
+                            <img
+                                className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-xl"
+                                src={profile.picture}
+                                alt="rider_image"
+                            />
+                            {/* Online/Offline dot */}
+                            <span className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${profile.isAvailable ? "bg-green-500" : "bg-gray-400"}`} />
                         </div>
 
-                        {/* toggle btn to go online & offline */}
-                        {
-                            profile.isVerified && !currentOrder && (
-                                <button
-                                    onClick={toggleAvailability}
-                                    disabled={toggling}
-                                    className={`w-full py-3.5 rounded-xl font-bold text-white tracking-wide transition-all duration-300 transform flex items-center justify-center gap-2 mt-4
-                                ${toggling
-                                            ? "bg-slate-400 cursor-not-allowed opacity-70"
-                                            : profile.isAvailable
-                                                ? "bg-linear-to-r from-slate-600 to-slate-800 shadow-lg shadow-slate-200 active:scale-95"
-                                                : "bg-linear-to-r from-[#e23744] to-[#f05a66] shadow-lg shadow-red-200 active:scale-95 hover:brightness-110"
-                                        }`}
-                                >
-                                    {toggling ? (
-                                        <>
-                                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                            <span>Updating...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
-                                        </>
-                                    )}
-                                </button>
-                            )
-                        }
-                    </div>
-                </div>
-            </div>
+                        <h2 className="mt-3 text-xl font-bold text-gray-900 tracking-tight">{user?.name}</h2>
+                        <p className="text-xs font-semibold text-gray-400 mt-0.5">📞 {profile.phoneNumber}</p>
 
-            {/* Enable sound notification button */}
-            {!audioUnlocked && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <span className="text-2xl">🔔</span>
-                        <div>
-                            <p className="font-medium text-blue-900">
-                                Enable Sound Notification
-                            </p>
-                            <p className="text-sm text-blue-700">
-                                Get notified when new orders arrive
+                        {/* Status Badges */}
+                        <div className="flex gap-2 mt-3">
+                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile.isVerified ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-600"}`}>
+                                {profile.isVerified ? "✓ Verified" : "⏳ Pending"}
+                            </span>
+                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile.isAvailable ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                                {profile.isAvailable ? "🟢 Online" : "⚫ Offline"}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Pro Tip Box */}
+                    <div className="mx-4 mb-4 bg-amber-50 border border-amber-100 p-3.5 rounded-2xl">
+                        <div className="flex items-start gap-2.5">
+                            <span className="text-lg">💡</span>
+                            <p className="text-[11px] leading-relaxed text-amber-700 font-medium">
+                                <span className="font-extrabold text-amber-900 uppercase text-[9px] tracking-wide mr-1">Pro Tip:</span>
+                                Stay within <span className="text-[#e23744] font-bold">500m</span> radius of restaurant hotspot to receive orders instantly.
                             </p>
                         </div>
                     </div>
 
-                    <button
-                        onClick={unlockAudio}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition"
-                    >
-                        Enable Sound
-                    </button>
+                    {/* Toggle Online/Offline button */}
+                    {profile.isVerified && !currentOrder && (
+                        <div className="px-4 pb-5">
+                            <button
+                                onClick={toggleAvailability}
+                                disabled={toggling}
+                                className={`w-full py-4 rounded-2xl font-extrabold text-white text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-[0.97]
+                                    ${toggling
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : profile.isAvailable
+                                            ? "bg-gradient-to-r from-slate-700 to-slate-900 shadow-slate-300"
+                                            : "bg-gradient-to-r from-[#e23744] to-[#f05a66] shadow-red-200 hover:brightness-105"
+                                    }`}
+                            >
+                                {toggling ? (
+                                    <>
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        <span>Updating...</span>
+                                    </>
+                                ) : (
+                                    <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
+                                )}
+                            </button>
+                        </div>
+                    )}
                 </div>
-            )}
 
-            {/* incoming new orders */}
-            {
-                profile.isAvailable && (incomingOrders.length > 0) &&
-                (
-                    <div className="mx-auto max-w-md px-4 space-y-3">
-                        <h3 className="font-semibold text-gray-700">Incoming Orders</h3>
-                        {
-                            incomingOrders.map((id) => (
-                                <RiderOrderRequest
-                                    key={id}
-                                    orderId={id}
-                                    onAccepted={() => {
-                                        fetchProfile();
-                                        fetchCurrentOrder();
-                                    }}
-                                />
-                            ))
-                        }
+                {/* Enable sound notification */}
+                {!audioUnlocked && (
+                    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-4 flex items-center justify-between shadow-lg shadow-blue-200">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl">🔔</div>
+                            <div>
+                                <p className="font-bold text-white text-sm">Enable Sound Alerts</p>
+                                <p className="text-xs text-blue-100">Get notified for new orders</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={unlockAudio}
+                            className="bg-white text-blue-600 hover:bg-blue-50 font-bold px-4 py-2 rounded-xl text-xs shadow transition-all active:scale-95"
+                        >
+                            Enable
+                        </button>
                     </div>
-                )
-            }
+                )}
 
-            {
-                currentOrder && (
-                    <div className="mx-auto max-w-md px-4 space-y-4">
+                {/* incoming new orders */}
+                {profile.isAvailable && incomingOrders.length > 0 && (
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-2 px-1">
+                            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                            <h3 className="font-extrabold text-gray-800 text-sm uppercase tracking-wide">New Incoming Orders</h3>
+                        </div>
+                        {incomingOrders.map((id) => (
+                            <RiderOrderRequest
+                                key={id}
+                                orderId={id}
+                                onAccepted={() => {
+                                    fetchProfile();
+                                    fetchCurrentOrder();
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {/* Current Order + Live Map */}
+                {currentOrder && (
+                    <div className="space-y-4">
                         <RiderCurrentOrder
                             order={currentOrder}
                             onStatusUpdate={fetchCurrentOrder}
                         />
+                        {/* rider live map */}
+                        <RiderOrderMap
+                            order={currentOrder}
+                        />
                     </div>
-                )
-            }
+                )}
+            </div>
         </div>
     );
 };

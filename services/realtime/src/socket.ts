@@ -43,14 +43,14 @@ export const initSocket = (server: http.Server) => {
       return;
     }
 
-    const userId = user._id; 
+    const userId = user._id;
     // e.g. "user123"
 
-    socket.join(`user:${userId}`); 
+    socket.join(`user:${userId}`);
     // Room = "user:user123"
 
     if (user.restaurantId) {
-      socket.join(`restaurant:${user.restaurantId}`); 
+      socket.join(`restaurant:${user.restaurantId}`);
       // Room = "restaurant:rest456"
     }
 

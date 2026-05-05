@@ -1,13 +1,9 @@
-import type { IOrder } from "../types";
-import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import * as L from "leaflet";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
-import { realtimeService } from "../main"
-import axios from "axios";
-
+import { useState, useEffect } from "react";
 
 declare module "leaflet" {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -56,9 +52,10 @@ const deliveryIcon = L.divIcon({
     className: "",
 });
 
-interface Props {
-    order: IOrder;
 
+interface Props {
+    riderLocation: [number, number],
+    deliveryLocation: [number, number]
 }
 
 // Fix: Route SVG z-index fix + map invalidateSize on mount
@@ -107,93 +104,7 @@ const RoutingControl = ({
 };
 
 
-const RiderOrderMap = ({ order }: Props) => {
-    const [riderLocation, setRiderLocation] = useState<[number, number] | null>(null);
-
-    if (!order.deliveryAddress.latitude || !order.deliveryAddress.longitude) {
-        console.log("order.deliveryAddress.latitude: ", order.deliveryAddress.latitude)
-        console.log("order.deliveryAddress.longitude: ", order.deliveryAddress.longitude)
-        return null;
-    }
-
-    const deliveryLocation: [number, number] = [
-        order.deliveryAddress.latitude,
-        order.deliveryAddress.longitude
-    ];
-
-    console.log("order: ", order)
-
-    useEffect(() => {
-        const fetchLocation = () => {
-            // getCurrentPosition uses 3 arguments
-            navigator.geolocation.getCurrentPosition(
-
-                // 1st Argument:Success Function (When location is  founds)
-                async (pos) => {
-                    const latitude = pos.coords.latitude;
-                    const longitude = pos.coords.longitude;
-
-                    setRiderLocation([latitude, longitude]);
-
-                    try {
-                        const response = await axios.post(`${realtimeService}/api/v1/internal/emit`,
-                            {
-                                event: "rider:location",
-                                room: `user:${order.userId}`,
-                                payload: {
-                                    latitude,
-                                    longitude
-                                }
-                            },
-                            {
-                                headers: {
-                                    "x-internal-key": import.meta.env.VITE_INTERNAL_SERVICE_KEY,
-                                }
-                            }
-                        );
-                        console.log("🚀 Location Emitted Successfully:", response.data);
-                    } catch (error: any) {
-                        console.error("❌ Emit Failed:", error.response?.data || error.message);
-                    }
-                },
-
-                // 2nd Argument: Error Function (when user doesn't allow location or any error occurs)
-                (err) => {
-                    console.log("Location error", err);
-                },
-
-                // 3rd Argument: Options
-                {
-                    enableHighAccuracy: true,
-                    maximumAge: 5000,
-                    timeout: 10000
-                }
-            );
-        };
-
-        fetchLocation();
-
-        const interval = setInterval(fetchLocation, 10000);
-
-        return () => clearInterval(interval);
-
-    }, [order.userId]);
-
-    if (!riderLocation) {
-        console.log("The riderLocation is :", riderLocation);
-        return (
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 h-[350px] w-full flex flex-col items-center justify-center gap-3 shadow-lg">
-                {/* Animated ping rings */}
-                <div className="relative flex items-center justify-center">
-                    <div className="absolute w-16 h-16 rounded-full bg-red-500/20 animate-ping" />
-                    <div className="absolute w-10 h-10 rounded-full bg-red-500/30 animate-ping delay-150" />
-                    <span className="text-4xl relative z-10">📍</span>
-                </div>
-                <p className="text-white font-semibold text-sm tracking-wide">Fetching Live Location...</p>
-                <p className="text-gray-400 text-xs">GPS signal acquiring</p>
-            </div>
-        );
-    }
+const UserOrderMap = ({ riderLocation, deliveryLocation }: Props) => {
 
 
     return (
@@ -250,7 +161,7 @@ const RiderOrderMap = ({ order }: Props) => {
                 />
             </MapContainer>
         </div>
-    );
+    )
+}
 
-};
-export default RiderOrderMap;
+export default UserOrderMap

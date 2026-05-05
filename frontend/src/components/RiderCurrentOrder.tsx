@@ -119,7 +119,7 @@ const RiderCurrentOrder = ({ order, onStatusUpdate }: Props) => {
                             </div>
                             <a
                                 href={`tel:${order.deliveryAddress.mobile}`}
-                                className="flex items-center gap-1.5 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 font-bold px-4 py-2 rounded-xl text-sm shadow-sm shadow-blue-200 transition-all"
+                                className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 font-bold px-4 py-2 rounded-xl text-sm shadow-sm shadow-blue-200 transition-all"
                             >
                                 📞 Call
                             </a>
@@ -132,7 +132,7 @@ const RiderCurrentOrder = ({ order, onStatusUpdate }: Props) => {
                     {
                         order.status === "rider_assigned" && (
                             <button
-                                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-xl py-3.5 font-bold text-sm shadow-md shadow-yellow-200 transition-all active:scale-95"
+                                className="w-full bg-linear-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-xl py-3.5 font-bold text-sm shadow-md shadow-yellow-200 transition-all active:scale-95"
                                 onClick={() => updateStatus()}
                             >
                                 🏍️ Reached Restaurant
@@ -143,7 +143,7 @@ const RiderCurrentOrder = ({ order, onStatusUpdate }: Props) => {
                     {
                         order.status === "picked_up" && (
                             <button
-                                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl py-3.5 font-bold text-sm shadow-md shadow-green-200 transition-all active:scale-95"
+                                className="w-full bg-linear-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl py-3.5 font-bold text-sm shadow-md shadow-green-200 transition-all active:scale-95"
                                 onClick={() => updateStatus()}
                             >
                                 ✅ Mark as Delivered

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { IOrder } from "../types";
 import axios from "axios";
 import { restaurantService } from "../main";
+import UserOrderMap from "../components/UserOrderMap";
 
 const OrderPage = () => {
     const { id } = useParams();
@@ -41,11 +42,43 @@ const OrderPage = () => {
         }
 
         socket.on("order:update", onOrderUpdate);
-        socket.on("order:rider_assigned",onOrderUpdate);
+        socket.on("order:rider_assigned", onOrderUpdate);
 
         return () => {
             socket.off("order:update", onOrderUpdate);
-            socket.off("order:rider_assigned",onOrderUpdate);
+            socket.off("order:rider_assigned", onOrderUpdate);
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (!socket || !id) return;
+
+        socket.emit("join", `user:${id}`);
+
+        return () => {
+            socket.emit("leave", `user:${id}`);
+        }
+    }, [socket, id]);
+
+    // when rider update its live location 
+
+    const [riderLocation, setRiderLocation] = useState<[number, number] | null>(null);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        console.log("✅ User Socket Connected:", socket.id);
+        console.log("🏠 Joining Room:", `user:${id}`);
+
+        const onRiderLocation = ({ latitude, longitude }: any) => {
+            console.log("Rider Location", latitude, longitude);
+            setRiderLocation([latitude, longitude]);
+        }
+
+        socket.on("rider:location", onRiderLocation);
+
+        return () => {
+            socket.off("rider:location", onRiderLocation);
         }
     }, [socket]);
 
@@ -106,6 +139,23 @@ const OrderPage = () => {
 
             <p className="text-xs text-gray-500">Payment Method: {order.paymentMethod}</p>
             <p className="text-xs text-gray-500">Payment Status: {order.paymentStatus}</p>
+
+
+            {/* show map to user/customer when rider assigned or picked_up */}
+            {
+                (order.status.toLowerCase() === "rider_assigned" || order.status.toLowerCase() === "picked_up") &&
+                (
+                    riderLocation ? (
+                        <UserOrderMap
+                            riderLocation={riderLocation}
+                            deliveryLocation={[order.deliveryAddress.latitude, order.deliveryAddress.longitude]}
+                        />
+                    ) : (
+                        <p className="">Waiting for rider location...</p>
+                    )
+                )
+            }
+
         </div>
     )
 }

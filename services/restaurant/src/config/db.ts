@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI as string, {
-      dbName: "MobiGO",
+      dbName: "mobigo",
     });
     console.log("MongoDB connected ");
   } catch (error) {

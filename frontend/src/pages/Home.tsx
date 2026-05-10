@@ -81,8 +81,8 @@ const Home = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
       {restaurants.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-          {restaurants.map((res) => {
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {restaurants.filter((res) => res.isVerified).map((res) => {
             const [resLng, resLat] = res.autoLocation.coordinates;
 
             const distance = getDistanceInKm(

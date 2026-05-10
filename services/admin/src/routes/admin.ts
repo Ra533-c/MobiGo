@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/admin/restaurant/pending", isAuth, isAdmin, getPendingRestaurants);
 router.get("/admin/rider/pending", isAuth, isAdmin, getPendingRiders);
-router.patch("/verify/rider/:id", isAuth, isAdmin, verifyRider);
 router.patch("/verify/restaurant/:id", isAuth, isAdmin, verifyRestaurant);
+router.patch("/verify/rider/:id", isAuth, isAdmin, verifyRider);
 
 export default router;

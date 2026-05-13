@@ -7,12 +7,12 @@ import { AppProvider } from './context/AppContext.tsx';
 import "leaflet/dist/leaflet.css"; //leaflet.css for styling leaflet map
 import { SocketProvider } from './context/SocketContext.tsx';
 
-export const authService = 'http://localhost:5000';
-export const restaurantService = 'http://localhost:5001';
-export const utilsService = 'http://localhost:5002';
-export const realtimeService = 'http://localhost:5004';
-export const riderService = 'http://localhost:5005';
-export const adminService = 'http://localhost:5006';
+export const authService = 'https://mobigo-auth.onrender.com';
+export const restaurantService = 'https://restaurant-service-zci6.onrender.com';
+export const utilsService = 'https://utils-service-eb6b.onrender.com';
+export const realtimeService = 'https://realtime-service-uvpk.onrender.com';
+export const riderService = 'https://rider-service-lg4s.onrender.com';
+export const adminService = 'https://admin-service-tq1y.onrender.com';
 
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId="331858214070-b0pekgtpebujsepsea2q9jn6nqfpouvv.apps.googleusercontent.com">

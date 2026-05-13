@@ -13,7 +13,7 @@ const ACTIVE_STATUSES = [
     "ready_for_rider",
     "rider_assigned",
     "picked_up",
-] as const;
+] as string[];
 
 const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
     const [orders, setOrders] = useState<IOrder[]>([]);
@@ -106,7 +106,7 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
         return () => {
             socket.off("order:rider_assigned", onUpdateOrder);
         }
-    },[socket]);
+    }, [socket]);
 
     if (loading) {
         return <p className="text-gray-50">Loading orders...</p>;
@@ -177,13 +177,13 @@ const RestaurantOrders = ({ restaurantId }: { restaurantId: string }) => {
                          gap-4"
                     >
                         {
-                        completedOrders.map((order) => (
-                            <OrderCard
-                                key={order._id}
-                                order={order}
-                                onStatusUpdate={fetchOrders}
-                            />
-                        ))
+                            completedOrders.map((order) => (
+                                <OrderCard
+                                    key={order._id}
+                                    order={order}
+                                    onStatusUpdate={fetchOrders}
+                                />
+                            ))
                         }
                     </div>
                 )}

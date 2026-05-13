@@ -1,5 +1,5 @@
+import { type ReactNode, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { authService, restaurantService } from "../main";
 import { type ICart, type AppContextType, type LocationData, type User } from "../types";

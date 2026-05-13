@@ -3,7 +3,7 @@ import * as L from "leaflet";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 declare module "leaflet" {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -110,7 +110,7 @@ const UserOrderMap = ({ riderLocation, deliveryLocation }: Props) => {
     return (
         <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-100">
             {/* Map Header Bar */}
-            <div className="absolute top-0 left-0 right-0 z-[999] bg-gradient-to-b from-black/60 to-transparent px-4 pt-3 pb-6 pointer-events-none">
+            <div className="absolute top-0 left-0 right-0 z-999 bg-gradient-to-b from-black/60 to-transparent px-4 pt-3 pb-6 pointer-events-none">
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-white/90 tracking-wider uppercase">🔴 Live Tracking</span>
                     <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -118,7 +118,7 @@ const UserOrderMap = ({ riderLocation, deliveryLocation }: Props) => {
             </div>
 
             {/* Legend Bottom Bar */}
-            <div className="absolute bottom-2 left-2 z-[999] flex gap-2 pointer-events-none">
+            <div className="absolute bottom-2 left-2 z-999 flex gap-2 pointer-events-none">
                 <div className="bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-full shadow text-xs font-semibold flex items-center gap-1.5">
                     <span>🛵</span> <span className="text-gray-700">Rider</span>
                 </div>

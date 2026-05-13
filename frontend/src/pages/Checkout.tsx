@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import type { ICart, IMenuItems, IRestaurant } from "../types.js";
 import toast from "react-hot-toast";
 import { BiCreditCard, BiLoader } from "react-icons/bi";
-import { loadStripe } from "@stripe/stripe-js";
 
 interface Address {
   _id: string;
@@ -23,7 +22,6 @@ const Checkout = () => {
     null,
   );
 
-  const [loading, setLoading] = useState(true);
   const [loadingAddress, setLoadingAddress] = useState(true);
 
   const [loadingRazorpay, setLoadingRazorpay] = useState(false);

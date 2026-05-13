@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../main";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import {  useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 import { useAppData } from "../context/AppContext";
 

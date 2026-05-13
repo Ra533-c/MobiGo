@@ -6,7 +6,7 @@ import AdminRiderCard from "../components/AdminRiderCard";
 
 const Admin = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
-  const [counts, setCounts] = useState({ restaurants: 0, riders: 0 });
+  const [, setCounts] = useState({ restaurants: 0, riders: 0 });
   const [riders, setRiders] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true)
@@ -92,7 +92,7 @@ const Admin = () => {
                 <p className="text-gray-500">No pending restaurants to approve.</p>
               ) : (
                 restaurants.map((r) => (
-                  <AdminRestaurantCard key={r._id} restaurant={r}  onVerify={fetchData}/>
+                  <AdminRestaurantCard key={r._id} restaurant={r} onVerify={fetchData} />
                 ))
               )
             }

@@ -15,9 +15,6 @@ const RestaurantProfile = ({ restaurant, isSeller, onUpdate }: props) => {
     const [editMode, setEditMode] = useState(false);
     const [name, setName] = useState(restaurant.name);
     const [description, setDescription] = useState(restaurant.description);
-    const [address, setAddress] = useState(restaurant.address);
-    const [phone, setPhone] = useState(restaurant.phone);
-    const [image, setImage] = useState(restaurant.image);
     const [isOpen, setIsOpen] = useState(restaurant.isOpen);
     const [loading, setLoading] = useState(false);
 

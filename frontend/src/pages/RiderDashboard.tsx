@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAppData } from "../context/AppContext";
 import { useSocket } from "../context/SocketContext";
 import { riderService } from "../main";
-import toast, { LoaderIcon } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useEffect, useRef, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 import type { IOrder } from "../types";
@@ -142,7 +142,7 @@ const RiderDashboard = () => {
                     },
                 );
                 toast.success(
-                    profile.isAvailable ? "You are now offline" : "You are now online",
+                    profile?.isAvailable ? "You are now offline" : "You are now online",
                 );
                 fetchProfile();
             } catch (error: any) {
@@ -201,7 +201,7 @@ const RiderDashboard = () => {
         });
     };
 
-    if (user.role !== "rider") {
+    if (user?.role !== "rider") {
         return (
             <div className="flex min-h-[60vh] items-center justify-center text-gray-500">
                 You are not authorized to access this dashboard
@@ -280,23 +280,23 @@ const RiderDashboard = () => {
                         <div className="relative">
                             <img
                                 className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-xl"
-                                src={profile.picture}
+                                src={profile?.picture}
                                 alt="rider_image"
                             />
                             {/* Online/Offline dot */}
-                            <span className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${profile.isAvailable ? "bg-green-500" : "bg-gray-400"}`} />
+                            <span className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${profile?.isAvailable ? "bg-green-500" : "bg-gray-400"}`} />
                         </div>
 
                         <h2 className="mt-3 text-xl font-bold text-gray-900 tracking-tight">{user?.name}</h2>
-                        <p className="text-xs font-semibold text-gray-400 mt-0.5">📞 {profile.phoneNumber}</p>
+                        <p className="text-xs font-semibold text-gray-400 mt-0.5">📞 {profile?.phoneNumber}</p>
 
                         {/* Status Badges */}
                         <div className="flex gap-2 mt-3">
-                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile.isVerified ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-600"}`}>
-                                {profile.isVerified ? "✓ Verified" : "⏳ Pending"}
+                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile?.isVerified ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-600"}`}>
+                                {profile?.isVerified ? "✓ Verified" : "⏳ Pending"}
                             </span>
-                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile.isAvailable ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                                {profile.isAvailable ? "🟢 Online" : "⚫ Offline"}
+                            <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${profile?.isAvailable ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                                {profile?.isAvailable ? "🟢 Online" : "⚫ Offline"}
                             </span>
                         </div>
                     </div>
@@ -313,7 +313,7 @@ const RiderDashboard = () => {
                     </div>
 
                     {/* Toggle Online/Offline button */}
-                    {profile.isVerified && !currentOrder && (
+                    {profile?.isVerified && !currentOrder && (
                         <div className="px-4 pb-5">
                             <button
                                 onClick={toggleAvailability}
@@ -321,7 +321,7 @@ const RiderDashboard = () => {
                                 className={`w-full py-4 rounded-2xl font-extrabold text-white text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-lg active:scale-[0.97]
                                     ${toggling
                                         ? "bg-gray-300 cursor-not-allowed"
-                                        : profile.isAvailable
+                                        : profile?.isAvailable
                                             ? "bg-gradient-to-r from-slate-700 to-slate-900 shadow-slate-300"
                                             : "bg-gradient-to-r from-[#e23744] to-[#f05a66] shadow-red-200 hover:brightness-105"
                                     }`}
@@ -332,7 +332,7 @@ const RiderDashboard = () => {
                                         <span>Updating...</span>
                                     </>
                                 ) : (
-                                    <span>{profile.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
+                                    <span>{profile?.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}</span>
                                 )}
                             </button>
                         </div>
